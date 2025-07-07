@@ -13,8 +13,8 @@ function App(props) {
         <Nav state={props.state} />
         <div className='app-wrapper-content'>
           <Routes>
-            <Route path="/dialogs" element={<Dialogs state={props.state} />} />
-            <Route path="/content" element={<Content state={props.state} addPost={props.addPost} updateNewPostText={props.updateNewPostText} />} />
+            <Route path="/dialogs" element={<Dialogs state={props.state} dispatch={props.dispatch} />} />
+            <Route path="/content" element={<Content state={props.state} dispatch={props.dispatch} />} />
           </Routes>
           
         </div>

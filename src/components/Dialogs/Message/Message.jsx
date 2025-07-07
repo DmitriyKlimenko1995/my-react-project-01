@@ -4,7 +4,7 @@ import dialogsmodule from './../Dialogs.module.css';
 const Message = (props) => {
     return (
         <div className={dialogsmodule.message}>
-            {props.message}
+            {`${props.id}: ${props.message}`}
         </div>
     );
 }

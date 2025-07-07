@@ -1,11 +1,12 @@
 import React from "react";
 import profileinfomodule from './ProfileInfo.module.css'
+import logo from './../../../feature-pic.webp'
 
 const ProfileInfo = (props) => {
     return (
         <div className={profileinfomodule.profile}>
             <div>
-                <img src='https://www.wearegecko.co.uk/media/50316/mountain-3.jpg' alt='mounts' />
+                <img src={logo} alt='mounts' />
             </div>
             <div className={profileinfomodule.description}>
                 ava + description
