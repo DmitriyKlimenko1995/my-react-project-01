@@ -1,20 +1,34 @@
 import React from "react";
 import dialogsmodule from './Dialogs.module.css';
+import Message from "./Message/Message";
+import DialogItem from "./Dialogitem/Dialogitem";
 
 const Dialogs = (props) => {
+
+    let newPostElement = React.createRef();
+    
+    let addPost = () => {
+        let text = newPostElement.current.value;
+        alert(text);
+    }
+
+    let messageElements = props.state.messagesPage.messages.map(m => <Message message={m.message} />);
+
+    let dialogElements = props.state.messagesPage.dialogs.map(d => <DialogItem name={d.name} id={d.id} />);
+
     return (
         <div className={dialogsmodule.dialogs}>
             <div className={dialogsmodule.dialogsItems}>
-                <div className={dialogsmodule.dialog}>Dmitriy</div>
-                <div className={dialogsmodule.dialog}>Oleg</div>
-                <div className={dialogsmodule.dialog}>Volodumur</div>
-                <div className={dialogsmodule.dialog}>Roman</div>
-                <div className={dialogsmodule.dialog}>Taras</div>
+                { dialogElements }
             </div>
             <div className={dialogsmodule.messages}>
-                <div className={dialogsmodule.message}>dznzmzyxfym</div>
-                <div className={dialogsmodule.message}>dznzmzyxfym</div>
-                <div className={dialogsmodule.message}>dznzmzyxfym</div>
+                { messageElements }
+                <div>
+                    <div>
+                        <textarea ref={newPostElement}></textarea>
+                    </div>
+                    <button onClick={addPost}>Add post</button>
+                </div>
             </div>
         </div>
         

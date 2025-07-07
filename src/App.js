@@ -5,16 +5,16 @@ import Header from './components/Header/Header';
 import Nav from './components/Navbar/Navbar';
 import {BrowserRouter, Route, Routes} from "react-router-dom";
 
-function App() {
+function App(props) {
   return (
     <BrowserRouter>
       <div className="app-wrapper">
         <Header />
-        <Nav />
+        <Nav state={props.state} />
         <div className='app-wrapper-content'>
           <Routes>
-            <Route path="/dialogs" element={<Dialogs />} />
-            <Route path="/content" element={<Content />} />
+            <Route path="/dialogs" element={<Dialogs state={props.state} />} />
+            <Route path="/content" element={<Content state={props.state} addPost={props.addPost} updateNewPostText={props.updateNewPostText} />} />
           </Routes>
           
         </div>

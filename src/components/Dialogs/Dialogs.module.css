@@ -14,3 +14,7 @@
 .messages .message {
     color: aliceblue;
 }
+
+.dialog a {
+    text-decoration: none;
+}

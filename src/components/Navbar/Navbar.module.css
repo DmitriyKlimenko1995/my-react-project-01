@@ -12,3 +12,9 @@
 .item a.active {
   color: gold;
 }
+
+.friend {
+  padding: 10px;
+  background-color: brown;
+  margin-top: 10px;
+}
