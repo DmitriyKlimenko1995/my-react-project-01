@@ -1,21 +1,25 @@
 import React from "react";
 import mypostsmodule from './MyPosts.module.css'
 import Post from "./Post/Post";
-import { addPostActionCreator, updateNewPostTextActionCreator } from "../../MyData/myState";
+import { useSelector, useDispatch } from "react-redux";
+import { addPost, updateNewPostText } from "../../MyData/content-slice";
 
-const MyPosts = (props) => {
+const MyPosts = () => {
 
-    let postsElements = props.state.profilePage.posts.map(p => <Post message={p.message} likesCount={p.likesCount} />);
+    const content = useSelector((state) => state.content);
+    const dispatch = useDispatch();
+
+    let postsElements = content.posts.map(p => <Post message={p.message} likesCount={p.likesCount} />);
 
     let newPostElement = React.createRef();
 
-    let addPost = () => {
-        props.dispatch(addPostActionCreator());
+    let addPosts = () => {
+        dispatch(addPost());
     }
 
     let onPostChange = () => {
         let text = newPostElement.current.value;
-        props.dispatch(updateNewPostTextActionCreator(text));
+        dispatch(updateNewPostText(text));
     }
 
     return (
@@ -23,9 +27,9 @@ const MyPosts = (props) => {
             My posts
             <div>
                 <div>
-                    <textarea onChange={onPostChange} ref={newPostElement} value={props.state.profilePage.newPostText}></textarea>
+                    <textarea onChange={onPostChange} ref={newPostElement} value={content.newPostText}></textarea>
                 </div>
-                <button onClick={addPost}>Add post</button>
+                <button onClick={addPosts}>Add post</button>
             </div>
             <div className={mypostsmodule.posts}>
                 { postsElements }

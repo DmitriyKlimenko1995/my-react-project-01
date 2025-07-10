@@ -1,3 +1,7 @@
+import contentReducer from "./content-slice";
+import dialogsReducer from "./dialogs-slice";
+import sitebarReducer from "./sitebar-slice";
+
 let store = {
     _state: {
         profilePage: {
@@ -37,6 +41,10 @@ let store = {
     getState() {
         return this._state;
     },
+    _callSubscriber(state) {
+        this.rerenderEntireTree(state);
+        console.log('rerender done!')
+    },
     rerenderEntireTree() {
         console.log("fuck you!");
     },
@@ -44,48 +52,14 @@ let store = {
         this.rerenderEntireTree = observer;
     },
     dispatch(action) {
-        switch(action.type) {
-            case 'ADD-POST':
-                let newPost = {
-                    id: 5,
-                    message: this._state.profilePage.newPostText,
-                    likesCount: 0
-                };
 
-                this._state.profilePage.posts.push(newPost);
-                this._state.profilePage.newPostText="";
-                this.rerenderEntireTree(this._state);
-                break;
-            case 'UPDATE-NEW-POST-TEXT':
-                this._state.profilePage.newPostText = action.newText;
-                this.rerenderEntireTree(this._state);
-                break;
-            case 'ADD-MESSAGE':
-                let newMessage = {
-                    id: this._state.messagesPage.messages.length + 1,
-                    message: this._state.messagesPage.newMessageText,
-                };
+        this._state.profilePage = contentReducer(this._state.profilePage, action);
+        this._state.messagesPage = dialogsReducer(this._state.messagesPage, action);
+        this._state.sitebar = sitebarReducer(this._state.sitebar, action);
 
-                this._state.messagesPage.messages.push(newMessage);
-                this._state.messagesPage.newMessageText="";
-                this.rerenderEntireTree(this._state);
-                break;
-            case 'UPDATE-NEW-MESSAGE-TEXT':
-                this._state.messagesPage.newMessageText = action.newText;
-                this.rerenderEntireTree(this._state);
-                break;
-            default:
-                break;
-        }
+        // this.rerenderEntireTree(this._state);
+        this._callSubscriber(this._state);
     }
 }
-
-export const addPostActionCreator = () => ({type: "ADD-POST"})
-
-export const updateNewPostTextActionCreator = (text) => ({type: "UPDATE-NEW-POST-TEXT", newText: text})
-
-export const addMessageActionCreator = () => ({type: "ADD-MESSAGE"})
-
-export const updateNewMessageTextActionCreator = (text) => ({type: "UPDATE-NEW-MESSAGE-TEXT", newText: text})
 
 export default store;

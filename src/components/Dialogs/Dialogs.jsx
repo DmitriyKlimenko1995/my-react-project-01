@@ -2,24 +2,28 @@ import React from "react";
 import dialogsmodule from './Dialogs.module.css';
 import Message from "./Message/Message";
 import DialogItem from "./Dialogitem/Dialogitem";
-import { addMessageActionCreator, updateNewMessageTextActionCreator } from "../MyData/myState";
+import { useSelector, useDispatch } from "react-redux";
+import { addMessage, updateNewMessageText } from "./../MyData/dialogs-slice";
 
-const Dialogs = (props) => {
+const Dialogs = () => {
+
+    const dialogss = useSelector((state) => state.dialogs);
+    const dispatch = useDispatch();
 
     let newPostElement = React.createRef();
     
     let addPost = () => {
-        props.dispatch(addMessageActionCreator());
+        dispatch(addMessage());
     }
 
-    let onPostChange = () => {
-        let text = newPostElement.current.value;
-        props.dispatch(updateNewMessageTextActionCreator(text));
+    let onPostChange = (e) => {
+        let text = e.target.value;
+        dispatch(updateNewMessageText(text));
     }
 
-    let messageElements = props.state.messagesPage.messages.map(m => <Message message={m.message} id={m.id} />);
+    let messageElements = dialogss.messages.map(m => <Message message={m.message} id={m.id} />);
 
-    let dialogElements = props.state.messagesPage.dialogs.map(d => <DialogItem name={d.name} id={d.id} />);
+    let dialogElements = dialogss.dialogs.map(d => <DialogItem name={d.name} id={d.id} />);
 
     return (
         <div className={dialogsmodule.dialogs}>
@@ -30,7 +34,7 @@ const Dialogs = (props) => {
                 { messageElements }
                 <div>
                     <div>
-                        <textarea ref={newPostElement} onChange={onPostChange} value={props.state.messagesPage.newMessageText}></textarea>
+                        <textarea ref={newPostElement} onChange={onPostChange} value={dialogss.newMessageText}></textarea>
                     </div>
                     <button onClick={addPost}>Add post</button>
                 </div>

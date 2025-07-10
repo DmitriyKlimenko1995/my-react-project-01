@@ -2,10 +2,13 @@ import React from "react";
 import navmodule from './Navbar.module.css'
 import { NavLink } from "react-router-dom";
 import Friend from "./Friend/Friend";
+import { useSelector } from "react-redux";
 
 const Nav = (props) => {
 
-    let friendElements = props.state.sitebar.friends.map(p => <Friend name={p.name} url={p.imageUrl} />);
+    const friends = useSelector((state) => state.sitebar);
+
+    let friendElements = friends.friends.map(p => <Friend name={p.name} url={p.imageUrl} />);
 
     return (
         <nav className={navmodule.nav}>
