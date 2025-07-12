@@ -4,6 +4,8 @@ import Dialogs from './components/Dialogs/Dialogs';
 import Header from './components/Header/Header';
 import Nav from './components/Navbar/Navbar';
 import {BrowserRouter, Route, Routes} from "react-router-dom";
+import UsersContainer from './components/Users/UsersContainer';
+import Users from './components/Users/Users';
 
 function App() {
   return (
@@ -15,6 +17,7 @@ function App() {
           <Routes>
             <Route path="/dialogs" element={<Dialogs />} />
             <Route path="/content" element={<Content />} />
+            <Route path="/users" element={<UsersContainer />} />
           </Routes>
           
         </div>
