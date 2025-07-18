@@ -1,8 +1,29 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+
+export const fetchUsers = createAsyncThunk(
+  'users/fetchAll',
+  async (pID, { rejectWithValue }) => {
+    try {
+      const response = await fetch('http://localhost:5000/api/users');
+      const data = await response.json();
+      return [data.users, pID]; // будет в action.payload при успешной загрузке
+    } catch (err) {
+      return rejectWithValue("Ошибка загрузки пользователей");
+    }
+  }
+);
 
 let initialState = {
   users: [],
-  newPostText: "input text!"
+  newPostText: "input text!",
+  pageSize: 3,
+  totalUsersCount: 20,
+  currentPage: 2,
+  totalPages: 1,
+  ProfileData: {},
+  loading: true,
+  error: null,
+  isFetching: true
 };
 
 const usersSlice = createSlice({
@@ -23,11 +44,42 @@ const usersSlice = createSlice({
     },
     setUsers(state, action) {
       state.users = action.payload;
+    },
+    setUsersCount(state, action) {
+      state.totalUsersCount = action.payload;
+    },
+    setUsersCurrentPage(state, action) {
+      state.currentPage = action.payload;
+    },
+    setUsersTotalPages(state, action) {
+      state.totalPages = action.payload;
+    },
+    toggleIsFetching(state, action) {
+      state.isFetching = action.payload;
+    },
+    setProfileData(state, action) {
+      state.ProfileData = action.payload;
     }
   },
+  extraReducers: (builder) => {
+    builder
+      .addCase(fetchUsers.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchUsers.fulfilled, (state, action) => {
+        state.users = [...action.payload[0]];
+        state.ProfileData = state.users[action.payload[1]];
+        state.loading = false;
+      })
+      .addCase(fetchUsers.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      });
+  }
 });
 
-export const { follow, unFollow, setUsers } = usersSlice.actions;
+export const { follow, unFollow, setUsers, setUsersCount, setUsersCurrentPage, setUsersTotalPages, toggleIsFetching, setProfileData } = usersSlice.actions;
 export default usersSlice.reducer;
 
 /* 

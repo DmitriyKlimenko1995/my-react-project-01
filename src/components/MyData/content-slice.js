@@ -2,11 +2,11 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 let initialState = {
-    posts: [
-        {id: 1, message: 'Hi how are you?', likesCount: 45},
-        {id: 2, message: "I'm fine thank you", likesCount: 49}
-    ],
-        newPostText: "input text!"
+  posts: [
+    { id: 1, message: 'Hi how are you?', likesCount: 45 },
+    { id: 2, message: "I'm fine thank you", likesCount: 49 }
+  ],
+  newPostText: "input text!"
 };
 
 const contentSlice = createSlice({
@@ -21,15 +21,18 @@ const contentSlice = createSlice({
       };
 
       state.posts.push(newPost);
-      state.newPostText="";
+      state.newPostText = "";
     },
     updateNewPostText(state, action) {
-      state.newPostText = action.newText;
+      state.newPostText = action.payload;
     },
+    setPosts(state, action) {
+      state.posts = action.payload; // или .push(...) если хочешь дописать
+    }
   },
 });
 
-export const { addPost, updateNewPostText } = contentSlice.actions;
+export const { addPost, updateNewPostText, setPosts } = contentSlice.actions;
 export default contentSlice.reducer;
 
 /* 

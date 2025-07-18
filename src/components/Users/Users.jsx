@@ -1,37 +1,36 @@
 import React from "react";
 import usersmodule from "./Users.module.css";
-
+import userPhoto from './../../assets/images/png-transparent-avatar-user-computer-icons-software-developer-avatar-child-face-heroes-thumbnail.png';
+import { NavLink } from "react-router-dom";
 
 
 let Users = (props) => {
 
 
-    /* if (props.userState.users.length < 21) {
-        dispatch(setUsers([
-        {id: 1, photoUrl: 'https://imgv3.fotor.com/images/blog-cover-image/a-shadow-of-a-boy-carrying-the-camera-with-red-sky-behind.jpg', followed: true, fullname: 'Dmitriy', status: 'I can suck myself', location: {city: 'Rovno', country: 'Ukraine'}},
-        {id: 2, photoUrl: {}, followed: true, fullname: 'Dmitriy', status: 'I can suck myself', location: {city: 'Rovno', country: 'Ukraine'}},
-        {id: 3, photoUrl: {}, followed: true, fullname: 'Dmitriy', status: 'I can suck myself', location: {city: 'Rovno', country: 'Ukraine'}},
-        {id: 4, photoUrl: {}, followed: true, fullname: 'Dmitriy', status: 'I can suck myself', location: {city: 'Rovno', country: 'Ukraine'}},
-        {id: 6, photoUrl: {}, followed: true, fullname: 'Dmitriy', status: 'I can suck myself', location: {city: 'Rovno', country: 'Ukraine'}},
-        {id: 5, photoUrl: {}, followed: true, fullname: 'Dmitriy', status: 'I can suck myself', location: {city: 'Rovno', country: 'Ukraine'}},
-        {id: 7, photoUrl: {}, followed: true, fullname: 'Dmitriy', status: 'I can suck myself', location: {city: 'Rovno', country: 'Ukraine'}},
-        {id: 8, photoUrl: {}, followed: true, fullname: 'Dmitriy', status: 'I can suck myself', location: {city: 'Rovno', country: 'Ukraine'}},
-        {id: 9, photoUrl: {}, followed: true, fullname: 'Dmitriy', status: 'I can suck myself', location: {city: 'Rovno', country: 'Ukraine'}},
-        {id: 10, photoUrl: {}, followed: true, fullname: 'Dmitriy', status: 'I can suck myself', location: {city: 'Rovno', country: 'Ukraine'}}
-    ]))
-    } */
+    let pages = [];
+    for (let i = 1; i <= props.userState.totalPages; i++) {
+        pages.push(i);
+    }
 
     return <div>
+        <div className={usersmodule.pageButton}>
+            {pages.map(p =>
+                <span className={props.userState.currentPage === p && usersmodule.selectedPage} onClick={() => { props.setUsersCurrentPageUp(p) }}>{p}</span>
+            )}
+        </div>
         {
-            props.userState.users.map(u => <div key ={u.id}>
+            props.userState.users.map(u => <div key={u.id}>
                 <div>
                     <div className={usersmodule.item}>
-                        <img src={u.photoUrl} alt="avatarPhoto" />
+                        <NavLink to={'/content/' + (u.id-1)}>
+                            <img src={typeof u.photoUrl === 'string' && u.photoUrl.trim() !== "" ? u.photoUrl : userPhoto} alt="avatarPhoto" />
+                        </NavLink>
                     </div>
                     <div>
-                        { u.followed ? (<button onClick={() => {props.unFollowUp(u.id)}}>UnFollow</button>) : (<button onClick={() => {props.followUp(u.id)}}>Follow</button>)}
+                        {u.followed ? (<button onClick={() => { props.unFollowUp(u.id) }}>UnFollow</button>) : (<button onClick={() => { props.followUp(u.id) }}>Follow</button>)}
                     </div>
                 </div>
+                {/* <img src={userPhoto} alt="avatarPhoto" /> */}
                 <div>
                     <div>
                         <div>{u.fullname}</div>
@@ -42,6 +41,7 @@ let Users = (props) => {
                         <div>{u.location.country}</div>
                     </div>
                 </div>
+
             </div>)
         }
     </div>

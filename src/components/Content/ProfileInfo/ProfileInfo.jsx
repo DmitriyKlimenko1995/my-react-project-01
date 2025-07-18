@@ -9,7 +9,7 @@ const ProfileInfo = (props) => {
                 <img src={logo} alt='mounts' />
             </div>
             <div className={profileinfomodule.description}>
-                ava + description
+                ava + description{props.profile.fullname}
             </div>
         </div>
     );

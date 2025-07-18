@@ -3,13 +3,15 @@ import contentSlice from "./content-slice";
 import dialogsSlice from "./dialogs-slice";
 import sitebarSlice from "./sitebar-slice";
 import usersSlice from "./users-slice";
+import authSlice from "./auth-slice";
 
 const store = configureStore({
     reducer: {
         content: contentSlice,
         dialogs: dialogsSlice,
         sitebar: sitebarSlice,
-        users: usersSlice
+        users: usersSlice,
+        auth: authSlice
     },
 });
 

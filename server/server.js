@@ -1,0 +1,148 @@
+// const express = require('express');
+import express from 'express';
+import cors from 'cors';
+import dotenv from 'dotenv';
+import authRoutes from './routes/auth.js';
+import mongoose from 'mongoose';
+const PORT = 5000;
+
+import { MongoClient } from 'mongodb';
+
+const url = "mongodb://127.0.0.1:27017/";
+const mongoClient = new MongoClient(url);
+
+dotenv.config();
+const app = express();
+app.use(cors());
+app.use(express.static("public"));
+app.use(express.json());
+
+(async () => {
+  try {
+    await mongoClient.connect();
+    const db = mongoClient.db("usersdb");
+
+    app.locals.usersCollection = db.collection("users");
+    app.locals.postsCollection = db.collection("posts");
+
+    console.log("Инициализация сервера...");
+    app.listen(PORT, () => {
+      console.log(`Сервер запущен: http://localhost:${PORT}`);
+    });
+    console.log("server is waiting connected");
+  } catch (err) {
+    return console.log(err);
+  }
+})();
+
+app.get('/api/users', async (req, res) => {
+  try {
+    const collection = req.app.locals.usersCollection;
+
+    // Получаем параметры запроса
+    const page = parseInt(req.query.page, 10) || 1;
+    const limit = parseInt(req.query.limit, 10) || 10;
+    const skip = (page - 1) * limit;
+
+    // Получаем пользователей с пагинацией
+    const users = await collection
+      .find({})
+      .skip(skip)
+      .limit(limit)
+      .toArray();
+
+    // Общее количество документов
+    const totalUsers = await collection.countDocuments();
+
+    // Вычисляем общее число страниц
+    const totalPages = Math.ceil(totalUsers / limit);
+
+    res.json({
+      users,
+      pageInfo: {
+        currentPage: page,
+        totalUsers,
+        totalPages,
+        limit,
+        hasNextPage: page < totalPages,
+        hasPrevPage: page > 1,
+        nextPage: page < totalPages ? page + 1 : null,
+        prevPage: page > 1 ? page - 1 : null
+      }
+    });
+  } catch (err) {
+    console.error("Ошибка при пагинации пользователей:", err);
+    res.status(500).json({ error: "Не удалось получить пользователей" });
+  }
+});
+
+/* app.get('/api/users', async (req, res) => {
+  try {
+    const users = await req.app.locals.usersCollection.find({}).toArray();
+    res.send(users[0].users);
+  } catch (err) {
+    console.error("Ошибка получения пользователей:", err);
+    res.status(500).send({ error: "Не удалось получить пользователей" });
+
+  }
+}); */
+
+app.get('/api/posts', async (req, res) => {
+  try {
+    const posts = await req.app.locals.postsCollection.find({}).toArray();
+    res.send(posts);
+  } catch (err) {
+    console.error("Ошибка получения постов:", err);
+    res.status(500).send({ error: "Не удалось получить посты" });
+  }
+});
+
+app.use('/api/auth', authRoutes);
+
+/* mongoose.connect(process.env.MONGO_URI)
+  .then(() => app.listen(5000, () => console.log('Server running')))
+  .catch(err => console.error(err)); */
+
+
+process.on("SIGINT", async () => {
+  await mongoClient.close();
+  console.log("Приложение BDmongo завершило работу");
+  process.exit();
+});
+
+
+/* const gracefulExit = (signal) => {
+  console.log(`Получен сигнал: ${signal}`);
+  mongoClient.close().then(() => {
+    console.log("MongoDB соединение закрыто");
+    process.exit(0);
+  });
+};
+
+['SIGINT', 'SIGTERM', 'SIGQUIT'].forEach(sig => {
+  process.on(sig, () => gracefulExit(sig));
+}); */
+
+/* ---------------------------------- */
+
+
+/* app.get('/api/users', (req, res) => {
+  res.json({ 
+    users: [
+            {id: 1, photoUrl: 'https://imgv3.fotor.com/images/blog-cover-image/a-shadow-of-a-boy-carrying-the-camera-with-red-sky-behind.jpg', followed: true, fullname: 'Dmitriy', status: 'I can suck myself', location: {city: 'Rovno', country: 'Ukraine'}},
+            {id: 2, photoUrl: "", followed: true, fullname: 'Dmitriy', status: 'I can suck myself', location: {city: 'Rovno', country: 'Ukraine'}},
+            {id: 3, photoUrl: undefined, followed: true, fullname: 'Dmitriy', status: 'I can suck myself', location: {city: 'Rovno', country: 'Ukraine'}},
+            {id: 4, photoUrl: {}, followed: true, fullname: 'Dmitriy', status: 'I can suck myself', location: {city: 'Rovno', country: 'Ukraine'}},
+            {id: 6, photoUrl: {}, followed: true, fullname: 'Dmitriy', status: 'I can suck myself', location: {city: 'Rovno', country: 'Ukraine'}},
+            {id: 5, photoUrl: {}, followed: true, fullname: 'Dmitriy', status: 'I can suck myself', location: {city: 'Rovno', country: 'Ukraine'}},
+            {id: 7, photoUrl: {}, followed: true, fullname: 'Dmitriy', status: 'I can suck myself', location: {city: 'Rovno', country: 'Ukraine'}},
+            {id: 8, photoUrl: {}, followed: true, fullname: 'Dmitriy', status: 'I can suck myself', location: {city: 'Rovno', country: 'Ukraine'}},
+            {id: 9, photoUrl: {}, followed: true, fullname: 'Dmitriy', status: 'I can suck myself', location: {city: 'Rovno', country: 'Ukraine'}},
+            {id: 10, photoUrl: {}, followed: true, fullname: 'Dmitriy', status: 'I can suck myself', location: {city: 'Rovno', country: 'Ukraine'}}
+    ]
+  });
+}); */
+
+/* app.listen(PORT, () => {
+  console.log(`Сервер запущен: http://localhost:${PORT}`);
+}); */
