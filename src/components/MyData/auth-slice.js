@@ -4,7 +4,7 @@ import axios from 'axios';
 
 export const loginUser = createAsyncThunk('auth/loginUser', async (credentials) => {
     const response = await axios.post('http://localhost:5000/api/auth/login', credentials);
-    return response.data.token;
+    return response.data;
 });
 
 export const registerUser = createAsyncThunk('auth/registerUser', async (credentials) => {
@@ -28,15 +28,17 @@ const authSlice = createSlice({
             state.status = null;
             localStorage.removeItem('authToken');
             localStorage.removeItem('authStatus');
+            localStorage.removeItem('userId');
         }
     },
     extraReducers: (builder) => {
         builder
             .addCase(loginUser.fulfilled, (state, action) => {
                 state.token = action.payload;
-                localStorage.setItem('authToken', action.payload);
+                localStorage.setItem('authToken', action.payload.token);
                 state.status = 'succeeded';
                 localStorage.setItem('authStatus', 'succeeded');
+                localStorage.setItem('userId', action.payload.user._id);
             })
             .addCase(loginUser.rejected, (state, action) => {
                 state.status = 'failed';

@@ -1,4 +1,4 @@
-const MongoClient = require("mongodb").MongoClient;
+import { MongoClient } from 'mongodb';
 
 const url = "mongodb://127.0.0.1:27017/";
 const mongoClient = new MongoClient(url);
@@ -156,14 +156,32 @@ const profiles = [
     }
 ];
 
+// const arr =[];
+
+// for (let i = 1; i <= 10; i++) {
+//     arr.push({id: i, data: {username: `admin${i}`, password: `admin${i}`}});
+// }
 async function run() {
     try {
         await mongoClient.connect();
         const db = mongoClient.db("usersdb");
-        const collection = db.collection("users");
-        const result = await collection.insertMany(users);
-        console.log(result);
-        console.log(users);
+        const collection = db.collection("messages");
+        const message = {
+            sender: '68753f67a2895059ea718dcf',            // ObjectId как строка
+            recipient: '68754140572128a85797765e',
+            text: 'sszgbfdbxf',
+            timestamp: new Date()
+        };
+
+        const result = await collection.insertOne(message);
+        // for (const item of arr) {
+        //     const result = await collection.updateOne(
+        //         { id: item.id },
+        //         { $set: item.data }
+        //     );
+        // }
+        // console.log(result);
+        console.log(message);
     } catch (err) {
         console.log(err);
     } finally {

@@ -16,6 +16,7 @@ const Header = (props) => {
     const logOut = (e) => {
         e.preventDefault();
         dispatch(logout());
+        props.handleSubscribe((prev => !prev));
     };
 
     return (

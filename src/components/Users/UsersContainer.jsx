@@ -1,11 +1,11 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { follow, unFollow, setUsers, setUsersCount, setUsersCurrentPage, setUsersTotalPages, toggleIsFetching } from "../MyData/users-slice";
+import { follow, unFollow, setUsers, setUsersCount, setUsersCurrentPage, setUsersTotalPages, toggleIsFetching, subScribe } from "../MyData/users-slice";
 import Users from "./Users";
 import Preloader from "../common/Preloader/Preloader";
 
 
-let UsersContainer = () => {
+let UsersContainer = (props) => {
 
     const users = useSelector((state) => state.users);
     const dispatch = useDispatch();
@@ -101,10 +101,20 @@ let UsersContainer = () => {
         dispatch(setUsersCurrentPage(currentPage));
     }
 
+    let setSubscribe =(userId, targetId) => {
+        dispatch(subScribe(userId, targetId));
+    }
+
+    let unSetSubscribe =(userId, targetId) => {
+        dispatch(subScribe(userId, targetId));
+    }
+
+
+
     return <>
         <Preloader userState={users} />
         {/* <button onClick={() => {dispatch(toggleIsFetching())}}>fetching</button> */}
-        <Users userState={users} followUp={followUp} unFollowUp={unFollowUp} setUsersCurrentPageUp={setUsersCurrentPageUp} />
+        <Users userState={users} followUp={followUp} unFollowUp={unFollowUp} setUsersCurrentPageUp={setUsersCurrentPageUp} setSubscribe={setSubscribe} unSetSubscribe={unSetSubscribe} refreshFlag={props.refreshFlag} />
     </>
 }
 

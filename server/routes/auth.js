@@ -2,12 +2,13 @@ import express from 'express';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import User from '../models/User.js';
+import { UsersCollection } from "./../db.js";
 
 const router = express.Router();
 
 router.post('/register', async (req, res) => {
     const { username, password } = req.body;
-    const usersCollection = req.app.locals.usersCollection;
+    const usersCollection = UsersCollection;
 
     try {
         const existingUser = await usersCollection.findOne({ username });
@@ -28,7 +29,7 @@ router.post('/register', async (req, res) => {
 
 router.post('/login', async (req, res) => {
     const { username, password } = req.body;
-    const usersCollection = req.app.locals.usersCollection;
+    const usersCollection = UsersCollection;
 
     try {
         const user = await usersCollection.findOne({username});
@@ -36,13 +37,17 @@ router.post('/login', async (req, res) => {
             return res.status(404).json({ error: 'Пользователь не найден' });
         }
 
-        const isValid = await bcrypt.compare(password, user.password);
-        if (!isValid) {
+        // const isValid = await bcrypt.compare(password, user.password);
+        // if (!isValid) {
+        //     return res.status(401).json({ error: 'Неверный пароль' });
+        // }
+
+        if (user.password !== password) {
             return res.status(401).json({ error: 'Неверный пароль' });
         }
 
         const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
-        res.json({ token });
+        res.json({ token, user });
     } catch (err) {
         console.error('Ошибка при входе:', err);
         res.status(500).json({ error: 'Ошибка сервера1' });

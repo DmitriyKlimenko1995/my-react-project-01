@@ -10,14 +10,27 @@ import RegisterForm from './components/Header/AuthReg/RegisterForm';
 import LoginForm from './components/Header/AuthReg/LoginForm';
 import PrivateRoute from './components/PrivateRouter/PrivateRoute';
 import HeaderContainer from './components/Header/HeaderContainer';
+import { useEffect, useState } from 'react';
+import ChatBox from './components/Dialogs/Chat/ChatBox';
+import ChatPath from './components/Dialogs/Chat/ChatPath';
 
 
 function App() {
+
+  const userId = localStorage.getItem('userId');
+
+  const [refreshFlag, setRefreshFlag] = useState(false);
+
+  const handleSubscribe = () => {
+    // выполнить подписку
+    setRefreshFlag(prev => !prev); // заставит Sidebar перерендериться
+  };
+
   return (
     <BrowserRouter>
       <div className="app-wrapper">
-        <Header />
-        <Nav />
+        <Header handleSubscribe={handleSubscribe} />
+        <Nav refreshFlag={refreshFlag} />
         <div className='app-wrapper-content'>
           <Routes>
             <Route
@@ -36,10 +49,16 @@ function App() {
               path="/users"
               element={
                 <PrivateRoute>
-                  <UsersContainer />
+                  <UsersContainer refreshFlag={handleSubscribe} />
                 </PrivateRoute>} />
             <Route path="/registerform" element={<RegisterForm />} />
-            <Route path="/loginform" element={<LoginForm />} />
+            <Route path="/loginform" element={<LoginForm handleSubscribe={handleSubscribe} />} />
+            <Route
+              path="/chat/:id"
+              element={
+                <PrivateRoute>
+                  <ChatPath />
+                </PrivateRoute>} />
           </Routes>
 
         </div>

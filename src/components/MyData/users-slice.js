@@ -1,4 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import axios from 'axios';
 
 export const fetchUsers = createAsyncThunk(
   'users/fetchAll',
@@ -13,17 +14,31 @@ export const fetchUsers = createAsyncThunk(
   }
 );
 
+export const subScribe = createAsyncThunk('user/subscribe', async (credentials) => {
+  const { userId, targetId } = credentials;
+  const response = await axios.post(`http://localhost:5000/api/sub/follow/${targetId}`, { userId });
+  return response.message;
+});
+
+export const unSubScribe = createAsyncThunk('user/unsubscribe', async (credentials) => {
+  const { userId, targetId } = credentials;
+  const response = await axios.post(`http://localhost:5000/api/sub/unfollow/${targetId}`, { userId });
+  return response.message;
+});
+
+
 let initialState = {
   users: [],
   newPostText: "input text!",
   pageSize: 3,
   totalUsersCount: 20,
-  currentPage: 2,
+  currentPage: 1,
   totalPages: 1,
   ProfileData: {},
   loading: true,
   error: null,
-  isFetching: true
+  isFetching: true,
+  followingInProgress: false
 };
 
 const usersSlice = createSlice({
@@ -32,13 +47,13 @@ const usersSlice = createSlice({
   reducers: {
     follow(state, action) {
       let user = state.users.find(el => el.id === action.payload);
-      if(user) {
+      if (user) {
         user.followed = true;
       }
     },
     unFollow(state, action) {
       let user = state.users.find(el => el.id === action.payload);
-      if(user) {
+      if (user) {
         user.followed = false;
       }
     },
@@ -75,6 +90,8 @@ const usersSlice = createSlice({
       .addCase(fetchUsers.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
+      })
+      .addCase(subScribe.fulfilled, (state, action) => {
       });
   }
 });

@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux';
 import { loginUser } from '../../MyData/auth-slice';
 import { useNavigate } from 'react-router-dom';
 
-function LoginForm() {
+function LoginForm(props) {
     const [formData, setFormData] = useState({ username: '', password: '' });
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -12,7 +12,8 @@ function LoginForm() {
         e.preventDefault();
         const result = await dispatch(loginUser(formData));
         if (result.meta.requestStatus === 'fulfilled') {
-            navigate(`/content/${0}`); // Перенаправляем на страницу входа
+            navigate(`/content/${0}`);
+            props.handleSubscribe(prev => !prev); // Перенаправляем на страницу входа
         }
 
     };

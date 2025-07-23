@@ -4,6 +4,7 @@ import dialogsSlice from "./dialogs-slice";
 import sitebarSlice from "./sitebar-slice";
 import usersSlice from "./users-slice";
 import authSlice from "./auth-slice";
+import messagesSlice from "./messagesSlice";
 
 const store = configureStore({
     reducer: {
@@ -11,7 +12,8 @@ const store = configureStore({
         dialogs: dialogsSlice,
         sitebar: sitebarSlice,
         users: usersSlice,
-        auth: authSlice
+        auth: authSlice,
+        messages: messagesSlice
     },
 });
 

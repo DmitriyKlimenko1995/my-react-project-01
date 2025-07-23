@@ -1,17 +1,19 @@
-// const express = require('express');
+import dotenv from "dotenv";
+dotenv.config();
 import express from 'express';
 import cors from 'cors';
-import dotenv from 'dotenv';
 import authRoutes from './routes/auth.js';
+import subScribe from './routes/subscribing.js';
+import messages from './routes/messages.js';
 import mongoose from 'mongoose';
+import { UsersCollection, MessagesCollection, postsCollection, client } from "./db.js";
 const PORT = 5000;
 
-import { MongoClient } from 'mongodb';
+// import { MongoClient } from 'mongodb';
 
-const url = "mongodb://127.0.0.1:27017/";
-const mongoClient = new MongoClient(url);
+// const url = "mongodb://127.0.0.1:27017/";
+// const mongoClient = new MongoClient(url);
 
-dotenv.config();
 const app = express();
 app.use(cors());
 app.use(express.static("public"));
@@ -19,11 +21,14 @@ app.use(express.json());
 
 (async () => {
   try {
-    await mongoClient.connect();
-    const db = mongoClient.db("usersdb");
+    // await mongoClient.connect();
+    // const db = mongoClient.db("usersdb");
 
-    app.locals.usersCollection = db.collection("users");
-    app.locals.postsCollection = db.collection("posts");
+    // app.locals.usersCollection = db.collection("users");
+    // app.locals.postsCollection = db.collection("posts");
+    // app.locals.messagesCollection = db.collection("messages");
+
+
 
     console.log("Инициализация сервера...");
     app.listen(PORT, () => {
@@ -37,7 +42,7 @@ app.use(express.json());
 
 app.get('/api/users', async (req, res) => {
   try {
-    const collection = req.app.locals.usersCollection;
+    const collection = UsersCollection;
 
     // Получаем параметры запроса
     const page = parseInt(req.query.page, 10) || 1;
@@ -89,7 +94,7 @@ app.get('/api/users', async (req, res) => {
 
 app.get('/api/posts', async (req, res) => {
   try {
-    const posts = await req.app.locals.postsCollection.find({}).toArray();
+    const posts = await postsCollection.find({}).toArray();
     res.send(posts);
   } catch (err) {
     console.error("Ошибка получения постов:", err);
@@ -98,17 +103,21 @@ app.get('/api/posts', async (req, res) => {
 });
 
 app.use('/api/auth', authRoutes);
+app.use('/api/sub', subScribe);
+app.use('/api/messages', messages);
 
 /* mongoose.connect(process.env.MONGO_URI)
   .then(() => app.listen(5000, () => console.log('Server running')))
   .catch(err => console.error(err)); */
 
 
-process.on("SIGINT", async () => {
-  await mongoClient.close();
-  console.log("Приложение BDmongo завершило работу");
-  process.exit();
-});
+// process.on("SIGINT", async () => {
+//   await client.close();
+//   // await mongoose.disconnect();
+//   console.log("Приложение BDmongo завершило работу");
+//   process.exit();
+// });
+
 
 
 /* const gracefulExit = (signal) => {
