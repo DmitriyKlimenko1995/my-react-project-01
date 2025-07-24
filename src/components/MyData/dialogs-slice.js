@@ -27,14 +27,15 @@ const dialogsSlice = createSlice({
     addMessage(state, action) {
         let newMessage = {
             id: state.messages.length + 1,
-            message: state.newMessageText,
+            message: state.newMessageText
         };
 
         state.messages.push(newMessage);
         state.newMessageText="";
     },
     updateNewMessageText(state, action) {
-      state.newMessageText = action.newText;
+        debugger;
+      state.newMessageText = action.payload;
     },
   },
 });

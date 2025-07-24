@@ -10,9 +10,11 @@ router.post("/", authMiddleware, async (req, res) => {
     const { recipientId, text } = req.body;
 
     try {
+        console.log(req.user._id.toString());
+        console.log(recipientId);
         const messagesCollection = MessagesCollection;
         const message = {
-            sender: req.user._id,            // ObjectId как строка
+            sender: req.user._id.toString(),            // ObjectId как строка
             recipient: recipientId,
             text,
             timestamp: new Date()
@@ -32,14 +34,14 @@ router.get("/:userId", authMiddleware, async (req, res) => {
         // console.log(messagesCollection.find());
         const userId = req.params.userId;
         console.log(userId);
-        console.log(new ObjectId(req.user._id));
+        console.log(req.user._id.toString());
 
 
         const messages = await messagesCollection
             .find({
                 $or: [
-                    { sender: new ObjectId(req.user._id), recipient: new ObjectId(userId) },
-                    { sender: new ObjectId(userId), recipient: new ObjectId(req.user._id) }
+                    { sender: req.user._id.toString(), recipient: userId },
+                    { sender: userId, recipient: req.user._id.toString() }
                 ]
             })
             .sort({ timestamp: 1 })

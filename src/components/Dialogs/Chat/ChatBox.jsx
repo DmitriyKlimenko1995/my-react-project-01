@@ -4,7 +4,7 @@ import { fetchDialog, sendMessage } from "./../../MyData/messagesSlice";
 import { useEffect, useState } from 'react';
 
 
-function ChatBox({ userId }) {
+function ChatBox({ userId, handleSubscribe }) {
     const dispatch = useDispatch();
     let { dialog } = useSelector(state => state.messages);
     console.log("dialog must be here");
@@ -20,13 +20,14 @@ function ChatBox({ userId }) {
         // console.log(token);
         dispatch(fetchDialog({ userId, token }));
         debugger
-    }, []);
+    }, [dispatch, token, userId, handleSubscribe]);
     debugger;
 
     const handleSend = () => {
         if (text.trim()) {
             dispatch(sendMessage({ recipientId: userId, text, token }));
             setText("");
+            handleSubscribe(prev => !prev);
             debugger;
         }
     };

@@ -57,7 +57,7 @@ function App() {
               path="/chat/:id"
               element={
                 <PrivateRoute>
-                  <ChatPath />
+                  <ChatPath handleSubscribe={handleSubscribe} />
                 </PrivateRoute>} />
           </Routes>
 
