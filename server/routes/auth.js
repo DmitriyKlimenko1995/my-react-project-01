@@ -8,6 +8,8 @@ const router = express.Router();
 
 router.post('/register', async (req, res) => {
     const { username, password } = req.body;
+    console.log(username);
+    console.log(password);
     const usersCollection = UsersCollection;
 
     try {
@@ -33,18 +35,19 @@ router.post('/login', async (req, res) => {
 
     try {
         const user = await usersCollection.findOne({username});
+        console.log(user);
         if (!user) {
             return res.status(404).json({ error: 'Пользователь не найден' });
         }
 
-        // const isValid = await bcrypt.compare(password, user.password);
-        // if (!isValid) {
-        //     return res.status(401).json({ error: 'Неверный пароль' });
-        // }
-
-        if (user.password !== password) {
+        const isValid = await bcrypt.compare(password, user.password);
+        if (!isValid) {
             return res.status(401).json({ error: 'Неверный пароль' });
         }
+
+        // if (user.password !== password) {
+        //     return res.status(401).json({ error: 'Неверный пароль' });
+        // }
 
         const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
         res.json({ token, user });

@@ -13,7 +13,7 @@ const Content = (props) => {
 
     return (
         <div className={contentmodule.content}>
-            <div key={props.profile.id}>
+            <div>
                 <div>
                     <div className={usersmodule.item}>
                         <img src={typeof props.profile.photoUrl === 'string' && props.profile.photoUrl.trim() !== "" ? props.profile.photoUrl : userPhoto} alt="avatarPhoto" />

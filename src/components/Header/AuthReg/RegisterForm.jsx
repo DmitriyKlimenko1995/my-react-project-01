@@ -10,6 +10,7 @@ function RegisterForm() {
         e.preventDefault();
         dispatch(registerUser(formData));
     };
+    debugger;
 
     return (
         <div>

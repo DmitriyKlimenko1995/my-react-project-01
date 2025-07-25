@@ -1,7 +1,7 @@
 import React from "react";
 import logo from "./../../logo.svg"
 import headermodule from './Header.module.css'
-import { NavLink } from "react-router-dom";
+import { NavLink, Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../MyData/auth-slice";
 
