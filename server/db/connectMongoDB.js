@@ -189,3 +189,70 @@ async function run() {
     }
 }
 run().catch(console.error);
+
+
+/* {
+  "_id": {
+    "$oid": "68753f67a2895059ea718dcf"
+  },
+  "id": 1,
+  "photoUrl": "https://imgv3.fotor.com/images/blog-cover-image/a-shadow-of-a-boy-carrying-the-camera-with-red-sky-behind.jpg",
+  "followed": true,
+  "fullname": "Dmitriy",
+  "status": "I can suck myself",
+  "location": {
+    "city": "Rovno",
+    "country": "Ukraine"
+  },
+  "password": "admin1",
+  "username": "admin1",
+  "following": [
+    {
+      "$oid": "68754140572128a857977661"
+    },
+    {
+      "$oid": "68754140572128a857977660"
+    },
+    {
+      "$oid": "68754140572128a85797765e"
+    },
+    {
+      "$oid": "68754140572128a857977664"
+    }
+  ],
+  "followers": [
+    {
+      "$oid": "687befc32aabf6d2feb6761b"
+    },
+    {
+      "$oid": "687befc32aabf6d2feb67620"
+    },
+    {
+      "$oid": "687befc62aabf6d2feb67635"
+    },
+    {
+      "$oid": "687befc62aabf6d2feb67638"
+    },
+    {
+      "$oid": "68754140572128a85797765e"
+    }
+  ]
+} */
+
+/* {
+  "_id": {
+    "$oid": "687411088ba3a2782e718dc5"
+  },
+  "posts": [
+    {
+      "id": 1,
+      "message": "Hi how are you?",
+      "likesCount": 45
+    },
+    {
+      "id": 1,
+      "message": "Hi how are you?",
+      "likesCount": 45
+    }
+  ]
+} */

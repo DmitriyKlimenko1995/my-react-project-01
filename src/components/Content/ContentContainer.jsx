@@ -10,6 +10,7 @@ const ContentContainer = () => {
 
     const users = useSelector((state) => state.users.users);
     const profile = useSelector((state) => state.users.ProfileData);
+    const ProfileStatus = useSelector((state) => state.users.ProfileStatus);
     const loading = useSelector((state) => state.users.loading);
     const error = useSelector((state) => state.users.error);
     debugger;
@@ -55,7 +56,7 @@ const ContentContainer = () => {
     if (error) return <div>Ошибка: {error}</div>;
     if (!profile) return <div>Профиль не найден</div>;
 
-    return <Content profile={profile} />;
+    return <Content profile={profile} ProfileStatus={ProfileStatus} />;
 };
 
 export default ContentContainer;

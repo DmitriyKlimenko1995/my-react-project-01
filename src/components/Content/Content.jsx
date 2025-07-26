@@ -5,6 +5,7 @@ import ProfileInfo from "./ProfileInfo/ProfileInfo";
 import { useDispatch, useSelector } from "react-redux";
 import usersmodule from './../Users/Users.module.css';
 import userPhoto from './../../assets/images/png-transparent-avatar-user-computer-icons-software-developer-avatar-child-face-heroes-thumbnail.png';
+import ProfileStatus from "./ProfileStatus/ProfileStatus";
 
 
 const Content = (props) => {
@@ -14,6 +15,9 @@ const Content = (props) => {
     return (
         <div className={contentmodule.content}>
             <div>
+                <div>
+                    <ProfileStatus ProfileStatus={props.ProfileStatus} />
+                </div>
                 <div>
                     <div className={usersmodule.item}>
                         <img src={typeof props.profile.photoUrl === 'string' && props.profile.photoUrl.trim() !== "" ? props.profile.photoUrl : userPhoto} alt="avatarPhoto" />
@@ -33,7 +37,7 @@ const Content = (props) => {
 
             </div>
             <ProfileInfo profile={props.profile} />
-            <MyPostContainer />
+            <MyPostContainer props={props} />
         </div>
     );
 }

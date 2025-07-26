@@ -1,59 +1,51 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import MyPost from "./MyPosts";
 import Post from "./Post/Post";
-import { connect } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { addPost, updateNewPostText, setPosts } from "../../MyData/content-slice";
 
-class MyPostContainer extends React.Component {
-    constructor(props) {
-        super(props);
-        this.newPostElement = React.createRef();
-    }
+const MyPostContainer = () => {
+    const dispatch = useDispatch();
+    const content = useSelector(state => state.content);
+    const newPostElement = useRef();
 
-    componentDidMount() {
-        fetch('http://localhost:5000/api/posts')
-            .then(res => res.json())
-            .then(data => this.props.setPosts(data[1].posts));
-    }
+    useEffect(() => {
+        const fetchPosts = async () => {
+            try {
+                const res = await fetch('http://localhost:5000/api/posts');
+                if (!res.ok) throw new Error('Server error');
+                const data = await res.json();
+                dispatch(setPosts(data[0]?.posts || []));
+            } catch (error) {
+                console.error("Failed to fetch posts:", error);
+            }
+        };
 
-    addPosts = () => {
-        this.props.addPost();
+        fetchPosts();
+    }, [dispatch]);
+
+    const addPosts = () => {
+        dispatch(addPost());
     };
 
-    onPostChange = () => {
-        const text = this.newPostElement.current.value;
-        this.props.updateNewPostText(text);
+    const onPostChange = () => {
+        const text = newPostElement.current?.value || "";
+        dispatch(updateNewPostText(text));
     };
 
+    const postsElements = content.posts.map(p => (
+        <Post key={p.id} message={p.message} likesCount={p.likesCount} />
+    ));
 
-    render() {
-
-        console.log(this.props.content.posts);
-
-        const postsElements = this.props.content.posts.map(p => (
-            <Post key={p.id} message={p.message} likesCount={p.likesCount} />
-        ));
-
-        return (
-            <MyPost
-                content={this.props.content}
-                postsElements={postsElements}
-                newPostElement={this.newPostElement}
-                addPost={this.addPosts}
-                onPostChange={this.onPostChange}
-            />
-        );
-    }
-}
-
-const mapStateToProps = (state) => ({
-    content: state.content,
-});
-
-const mapDispatchToProps = {
-    addPost,
-    updateNewPostText,
-    setPosts
+    return (
+        <MyPost
+            content={content}
+            postsElements={postsElements}
+            newPostElement={newPostElement}
+            addPost={addPosts}
+            onPostChange={onPostChange}
+        />
+    );
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(MyPostContainer);
+export default MyPostContainer;

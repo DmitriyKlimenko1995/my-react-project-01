@@ -35,6 +35,7 @@ let initialState = {
   currentPage: 1,
   totalPages: 1,
   ProfileData: {},
+  ProfileStatus: "status",
   loading: true,
   error: null,
   isFetching: true,
