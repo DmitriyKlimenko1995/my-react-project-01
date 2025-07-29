@@ -36,6 +36,7 @@ let initialState = {
   totalPages: 1,
   ProfileData: {},
   ProfileStatus: "status",
+  newStatusText: "input status",
   loading: true,
   error: null,
   isFetching: true,
@@ -75,6 +76,12 @@ const usersSlice = createSlice({
     },
     setProfileData(state, action) {
       state.ProfileData = action.payload;
+    },
+    updateNewStatusText(state, action) {
+      state.newStatusText = action.payload;
+    },
+    updateProfileStatusText(state, action) {
+      state.ProfileStatus = action.payload;
     }
   },
   extraReducers: (builder) => {
@@ -97,7 +104,7 @@ const usersSlice = createSlice({
   }
 });
 
-export const { follow, unFollow, setUsers, setUsersCount, setUsersCurrentPage, setUsersTotalPages, toggleIsFetching, setProfileData } = usersSlice.actions;
+export const { follow, unFollow, setUsers, setUsersCount, setUsersCurrentPage, setUsersTotalPages, toggleIsFetching, setProfileData, updateNewStatusText, updateProfileStatusText } = usersSlice.actions;
 export default usersSlice.reducer;
 
 /* 

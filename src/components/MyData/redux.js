@@ -13,7 +13,7 @@ const store = configureStore({
         sitebar: sitebarSlice,
         users: usersSlice,
         auth: authSlice,
-        messages: messagesSlice
+        messages: messagesSlice,
     },
 });
 

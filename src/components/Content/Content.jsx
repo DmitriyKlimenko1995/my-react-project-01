@@ -5,7 +5,8 @@ import ProfileInfo from "./ProfileInfo/ProfileInfo";
 import { useDispatch, useSelector } from "react-redux";
 import usersmodule from './../Users/Users.module.css';
 import userPhoto from './../../assets/images/png-transparent-avatar-user-computer-icons-software-developer-avatar-child-face-heroes-thumbnail.png';
-import ProfileStatus from "./ProfileStatus/ProfileStatus";
+import UserStatus from "./ProfileStatus/UserStatus";
+
 
 
 const Content = (props) => {
@@ -16,7 +17,7 @@ const Content = (props) => {
         <div className={contentmodule.content}>
             <div>
                 <div>
-                    <ProfileStatus ProfileStatus={props.ProfileStatus} />
+                    <UserStatus userId={props.userId} />
                 </div>
                 <div>
                     <div className={usersmodule.item}>

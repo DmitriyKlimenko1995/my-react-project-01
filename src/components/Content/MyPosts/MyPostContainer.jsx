@@ -15,7 +15,7 @@ const MyPostContainer = () => {
                 const res = await fetch('http://localhost:5000/api/posts');
                 if (!res.ok) throw new Error('Server error');
                 const data = await res.json();
-                dispatch(setPosts(data[0]?.posts || []));
+                dispatch(setPosts(data[1]?.posts || []));
             } catch (error) {
                 console.error("Failed to fetch posts:", error);
             }

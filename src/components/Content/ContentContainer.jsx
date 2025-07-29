@@ -1,16 +1,17 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import Content from "./Content";
-import { fetchUsers, setProfileData } from './../MyData/users-slice'
+import { fetchUsers, setProfileData, fetchStatus, addStatus, updateNewStatusText, setStatus } from './../MyData/users-slice'
 
 const ContentContainer = () => {
     const dispatch = useDispatch();
     const { id } = useParams();
+    let newStatusElement = React.createRef();
 
-    const users = useSelector((state) => state.users.users);
+    const status = useSelector((state) => state.users.ProfileStatus);
     const profile = useSelector((state) => state.users.ProfileData);
-    const ProfileStatus = useSelector((state) => state.users.ProfileStatus);
+    const ProfileStatus = useSelector((state) => state.users.newStatusText);
     const loading = useSelector((state) => state.users.loading);
     const error = useSelector((state) => state.users.error);
     debugger;
@@ -20,6 +21,14 @@ const ContentContainer = () => {
         debugger;
         dispatch(fetchUsers(Number(id)));
     }, [dispatch, id]);
+
+
+    // const onStatusChange = (e) => {
+    //     const text = e.target.value;
+    //     dispatch(updateNewStatusText(text));
+    // };
+
+
 
 
 
@@ -52,11 +61,11 @@ const ContentContainer = () => {
     }, [id, users, dispatch]);
     debugger; */
 
-    if (loading) return <div>Загрузка...</div>;
+    if (loading) return <div><NavLink to={`/profile/${id}`}>Загрузка...</NavLink></div>;
     if (error) return <div>Ошибка: {error}</div>;
     if (!profile) return <div>Профиль не найден</div>;
 
-    return <Content profile={profile} ProfileStatus={ProfileStatus} />;
+    return <Content profile={profile} userId={(Number(id) + 1)} />;
 };
 
 export default ContentContainer;

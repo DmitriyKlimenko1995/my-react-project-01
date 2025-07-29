@@ -13,6 +13,7 @@ import HeaderContainer from './components/Header/HeaderContainer';
 import { useEffect, useState } from 'react';
 import ChatBox from './components/Dialogs/Chat/ChatBox';
 import ChatPath from './components/Dialogs/Chat/ChatPath';
+import MyForm from './components/Content/MyForm/MyForm';
 
 
 function App() {
@@ -59,6 +60,13 @@ function App() {
                 <PrivateRoute>
                   <ChatPath handleSubscribe={handleSubscribe} />
                 </PrivateRoute>} />
+            <Route
+              path="/profile/:id"
+              element={
+                <PrivateRoute>
+                  <MyForm />
+                </PrivateRoute>} />
+
           </Routes>
 
         </div>

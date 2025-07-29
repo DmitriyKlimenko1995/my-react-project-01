@@ -3,6 +3,7 @@ dotenv.config();
 import express from 'express';
 import cors from 'cors';
 import authRoutes from './routes/auth.js';
+import status from './routes/status.js';
 import subScribe from './routes/subscribing.js';
 import messages from './routes/messages.js';
 import mongoose from 'mongoose';
@@ -105,6 +106,7 @@ app.get('/api/posts', async (req, res) => {
 app.use('/api/auth', authRoutes);
 app.use('/api/sub', subScribe);
 app.use('/api/messages', messages);
+app.use('/api/status', status);
 
 /* mongoose.connect(process.env.MONGO_URI)
   .then(() => app.listen(5000, () => console.log('Server running')))

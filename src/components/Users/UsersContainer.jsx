@@ -101,15 +101,13 @@ let UsersContainer = (props) => {
         dispatch(setUsersCurrentPage(currentPage));
     }
 
-    let setSubscribe =(userId, targetId) => {
+    let setSubscribe = (userId, targetId) => {
         dispatch(subScribe(userId, targetId));
     }
 
-    let unSetSubscribe =(userId, targetId) => {
+    let unSetSubscribe = (userId, targetId) => {
         dispatch(subScribe(userId, targetId));
     }
-
-
 
     return <>
         <Preloader userState={users} />
