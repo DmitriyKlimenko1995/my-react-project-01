@@ -2,7 +2,8 @@ import React, { useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import Content from "./Content";
-import { fetchUsers, setProfileData, fetchStatus, addStatus, updateNewStatusText, setStatus } from './../MyData/users-slice'
+import { fetchUsers, setProfileData, fetchStatus, addStatus, updateNewStatusText, setStatus } from './../MyData/users-slice';
+import { NavLink } from "react-router-dom";
 
 const ContentContainer = () => {
     const dispatch = useDispatch();
@@ -61,9 +62,9 @@ const ContentContainer = () => {
     }, [id, users, dispatch]);
     debugger; */
 
-    if (loading) return <div><NavLink to={`/profile/${id}`}>Загрузка...</NavLink></div>;
+    if (loading) return <div>Загрузка...</div>;
     if (error) return <div>Ошибка: {error}</div>;
-    if (!profile) return <div>Профиль не найден</div>;
+    if (!profile) return <div><NavLink to={`/profile/${id}`}>Profile not found</NavLink></div>;
 
     return <Content profile={profile} userId={(Number(id) + 1)} />;
 };

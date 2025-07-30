@@ -2,6 +2,8 @@ import dotenv from "dotenv";
 dotenv.config();
 import express from 'express';
 import cors from 'cors';
+import authMiddleware from "./middleware/auth.js";
+import bodyParser from 'body-parser';
 import authRoutes from './routes/auth.js';
 import status from './routes/status.js';
 import subScribe from './routes/subscribing.js';
@@ -19,6 +21,7 @@ const app = express();
 app.use(cors());
 app.use(express.static("public"));
 app.use(express.json());
+app.use(bodyParser.json());
 
 (async () => {
   try {
@@ -80,6 +83,30 @@ app.get('/api/users', async (req, res) => {
     console.error("Ошибка при пагинации пользователей:", err);
     res.status(500).json({ error: "Не удалось получить пользователей" });
   }
+});
+
+// Маршрут для обработки формы
+app.post('/api/form-submit', authMiddleware, async (req, res) => {
+  const data = req.body;
+
+  // Базовая валидация на сервере
+  if (!name || !email) {
+    return res.status(400).json({ error: 'Имя и Email обязательны' });
+  }
+
+  // Здесь можно добавить сохранение в БД или логику
+  const userId = req.user._id;
+  const collection = UsersCollection;
+
+  const result = await collection.updateOne(
+    { _id: userId },
+    { $set: data }
+  );
+
+  return res.json({
+    message: 'Форма успешно получена',
+    data: data
+  });
 });
 
 /* app.get('/api/users', async (req, res) => {
