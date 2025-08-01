@@ -2,21 +2,20 @@ import React, { useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import Content from "./Content";
-import { fetchUsers, setProfileData, fetchStatus, addStatus, updateNewStatusText, setStatus } from './../MyData/users-slice';
-import { NavLink } from "react-router-dom";
+import { fetchUsers } from './../MyData/users-slice';
 
 const ContentContainer = () => {
     const dispatch = useDispatch();
     const { id } = useParams();
     let newStatusElement = React.createRef();
+    const userId = localStorage.getItem('userId');
 
-    const status = useSelector((state) => state.users.ProfileStatus);
     const profile = useSelector((state) => state.users.ProfileData);
-    const ProfileStatus = useSelector((state) => state.users.newStatusText);
     const loading = useSelector((state) => state.users.loading);
     const error = useSelector((state) => state.users.error);
+    const users = useSelector((state) => state.users.users);
     debugger;
-    // const userProfile = users.find((u) => u.id === Number(id));
+    const userProfile = users.find((u) => u._id === userId);
 
     useEffect(() => {
         debugger;
@@ -64,7 +63,7 @@ const ContentContainer = () => {
 
     if (loading) return <div>Загрузка...</div>;
     if (error) return <div>Ошибка: {error}</div>;
-    if (!profile) return <div><NavLink to={`/profile/${id}`}>Profile not found</NavLink></div>;
+    // if (!profile) return <div>Profile not found</div>;
 
     return <Content profile={profile} userId={(Number(id) + 1)} />;
 };

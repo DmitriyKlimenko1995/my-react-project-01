@@ -40,7 +40,8 @@ let initialState = {
   loading: true,
   error: null,
   isFetching: true,
-  followingInProgress: false
+  followingInProgress: false,
+  userFormFields: {}
 };
 
 const usersSlice = createSlice({
@@ -80,6 +81,21 @@ const usersSlice = createSlice({
     updateNewStatusText(state, action) {
       state.newStatusText = action.payload;
     },
+    updateNewFullNameText(state, action) {
+      state.userFormFields.fullname = action.payload;
+    },
+    updateNewIdText(state, action) {
+      state.userFormFields.id = action.payload;
+    },
+    updateNewCityText(state, action) {
+      state.userFormFields.city = action.payload;
+    },
+    updateNewCountryText(state, action) {
+      state.userFormFields.country = action.payload;
+    },
+    updateNewPhotoUrlText(state, action) {
+      state.userFormFields.photoUrl = action.payload;
+    },
     updateProfileStatusText(state, action) {
       state.ProfileStatus = action.payload;
     }
@@ -104,7 +120,7 @@ const usersSlice = createSlice({
   }
 });
 
-export const { follow, unFollow, setUsers, setUsersCount, setUsersCurrentPage, setUsersTotalPages, toggleIsFetching, setProfileData, updateNewStatusText, updateProfileStatusText } = usersSlice.actions;
+export const { follow, unFollow, setUsers, setUsersCount, setUsersCurrentPage, setUsersTotalPages, toggleIsFetching, setProfileData, updateNewStatusText, updateProfileStatusText, updateNewFullNameText, updateNewIdText, updateNewCityText, updateNewCountryText, updateNewPhotoUrlText } = usersSlice.actions;
 export default usersSlice.reducer;
 
 /* 

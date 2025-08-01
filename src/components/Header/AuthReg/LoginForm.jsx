@@ -12,7 +12,8 @@ function LoginForm(props) {
         e.preventDefault();
         const result = await dispatch(loginUser(formData));
         if (result.meta.requestStatus === 'fulfilled') {
-            navigate(`/content/${0}`);
+            const userId = result.payload?.user?.id;
+            navigate(`/content/${(userId - 1)}`);
             props.handleSubscribe(prev => !prev); // Перенаправляем на страницу входа
         }
 

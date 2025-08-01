@@ -6,38 +6,42 @@ import { useDispatch, useSelector } from "react-redux";
 import usersmodule from './../Users/Users.module.css';
 import userPhoto from './../../assets/images/png-transparent-avatar-user-computer-icons-software-developer-avatar-child-face-heroes-thumbnail.png';
 import UserStatus from "./ProfileStatus/UserStatus";
+import { NavLink } from "react-router-dom";
 
 
 
 const Content = (props) => {
-   /*  const users = useSelector((state) => state.users); */
+    /*  const users = useSelector((state) => state.users); */
     debugger;
 
     return (
         <div className={contentmodule.content}>
-            <div>
-                <div>
-                    <UserStatus userId={props.userId} />
-                </div>
-                <div>
-                    <div className={usersmodule.item}>
-                        <img src={typeof props.profile.photoUrl === 'string' && props.profile.photoUrl.trim() !== "" ? props.profile.photoUrl : userPhoto} alt="avatarPhoto" />
-                    </div>
-                </div>
-                {/* <img src={userPhoto} alt="avatarPhoto" /> */}
+            {props.profile ? <div>
                 <div>
                     <div>
-                        <div>{props.profile.fullname}</div>
-                        <div>{props.profile.status}</div>
+                        <UserStatus userId={props.userId} />
                     </div>
                     <div>
-                        <div>{props.profile.location.city}</div>
-                        <div>{props.profile.location.country}</div>
+                        <div>
+                            <div className={usersmodule.item}>
+                                <img src={typeof props.profile.photoUrl === 'string' && props.profile.photoUrl.trim() !== "" ? props.profile.photoUrl : userPhoto} alt="avatarPhoto" />
+                            </div>
+                        </div>
+                        <div>
+                            <div>
+                                <div>{props.profile.fullname}</div>
+                                <div>{props.profile.status}</div>
+                            </div>
+                            <div>
+                                <div>{props.profile.location.city}</div>
+                                <div>{props.profile.location.country}</div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-
-            </div>
-            <ProfileInfo profile={props.profile} />
+                <ProfileInfo profile={props.profile} />
+            </div> : <div>Profile not found</div>}
+            <div><NavLink to={`/profile/${props.userId}`}><button >Редактировать профиль</button></NavLink></div>
             <MyPostContainer props={props} />
         </div>
     );

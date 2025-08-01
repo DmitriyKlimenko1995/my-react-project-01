@@ -90,9 +90,9 @@ app.post('/api/form-submit', authMiddleware, async (req, res) => {
   const data = req.body;
 
   // Базовая валидация на сервере
-  if (!name || !email) {
+  /* if (!name || !email) {
     return res.status(400).json({ error: 'Имя и Email обязательны' });
-  }
+  } */
 
   // Здесь можно добавить сохранение в БД или логику
   const userId = req.user._id;
