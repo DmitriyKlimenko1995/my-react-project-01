@@ -15,6 +15,7 @@ const store = configureStore({
         auth: authSlice,
         messages: messagesSlice,
     },
+    devTools: process.env.NODE_ENV !== 'production',
 });
 
 /* let reducers = combineReducers({

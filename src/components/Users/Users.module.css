@@ -25,3 +25,11 @@
   margin: 15px;
   border-radius: 10px;
 }
+
+.paginator {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  justify-content: center;
+  margin-top: 1rem;
+}
