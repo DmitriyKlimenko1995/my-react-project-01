@@ -1,6 +1,6 @@
 import React from "react";
 import friend_module from './Friend.module.css'
-import userPhoto from './../../../assets/images/png-transparent-avatar-user-computer-icons-software-developer-avatar-child-face-heroes-thumbnail.png';
+import userPhoto from './../../../assets/images/avatar.png';
 
 const Friend = (props) => {
     return (

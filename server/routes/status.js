@@ -24,7 +24,7 @@ router.post("/", async (req, res) => {
     }
     try {
         const result = await UsersCollection.updateOne(
-            { id: userId.toString() },
+            { id: userId },
             { $set: { status: statusText } }
         );
         res.status(201).json({ updated: result.modifiedCount });

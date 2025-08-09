@@ -4,7 +4,7 @@ import MyPostContainer from './MyPosts/MyPostContainer';
 import ProfileInfo from "./ProfileInfo/ProfileInfo";
 import { useDispatch, useSelector } from "react-redux";
 import usersmodule from './../Users/Users.module.css';
-import userPhoto from './../../assets/images/png-transparent-avatar-user-computer-icons-software-developer-avatar-child-face-heroes-thumbnail.png';
+import userPhoto from './../../assets/images/avatar.png';
 import UserStatus from "./ProfileStatus/UserStatus";
 import { NavLink } from "react-router-dom";
 

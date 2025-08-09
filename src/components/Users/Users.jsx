@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import usersmodule from "./Users.module.css";
-import userPhoto from './../../assets/images/png-transparent-avatar-user-computer-icons-software-developer-avatar-child-face-heroes-thumbnail.png';
+import userPhoto from './../../assets/images/avatar.png';
 import { NavLink } from "react-router-dom";
 import FollowButton from "./FollowButton";
 import ChatBox from "../Dialogs/Chat/ChatBox";
