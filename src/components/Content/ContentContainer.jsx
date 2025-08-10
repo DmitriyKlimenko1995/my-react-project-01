@@ -14,8 +14,9 @@ const ContentContainer = () => {
     const loading = useSelector((state) => state.users.loading);
     const error = useSelector((state) => state.users.error);
     const users = useSelector((state) => state.users.users);
-    debugger;
     const userProfile = users.find((u) => u._id === userId);
+    const isProfile = userProfile?.id - 1 == id;
+    debugger;
 
     useEffect(() => {
         debugger;
@@ -65,7 +66,7 @@ const ContentContainer = () => {
     if (error) return <div>Ошибка: {error}</div>;
     // if (!profile) return <div>Profile not found</div>;
 
-    return <Content profile={profile} userId={(Number(id) + 1)} />;
+    return <Content profile={profile} userId={(Number(id) + 1)} userProfile={isProfile} />;
 };
 
 export default ContentContainer;

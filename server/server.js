@@ -6,6 +6,7 @@ import authMiddleware from "./middleware/auth.js";
 import bodyParser from 'body-parser';
 import authRoutes from './routes/auth.js';
 import status from './routes/status.js';
+import savephoto from './routes/savePhoto.js';
 import subScribe from './routes/subscribing.js';
 import messages from './routes/messages.js';
 import mongoose from 'mongoose';
@@ -99,7 +100,7 @@ app.post('/api/form-submit', authMiddleware, async (req, res) => {
   const collection = UsersCollection;
 
   const result = await collection.updateOne(
-    { _id: userId },
+    { _id: userId.toString() },
     { $set: data }
   );
 
@@ -134,6 +135,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/sub', subScribe);
 app.use('/api/messages', messages);
 app.use('/api/status', status);
+app.use('/api/save-photo', savephoto);
 
 /* mongoose.connect(process.env.MONGO_URI)
   .then(() => app.listen(5000, () => console.log('Server running')))

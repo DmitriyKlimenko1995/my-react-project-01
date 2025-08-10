@@ -41,7 +41,8 @@ let initialState = {
   error: null,
   isFetching: true,
   followingInProgress: false,
-  userFormFields: {}
+  userFormFields: {},
+  profilePhoto: ""
 };
 
 const usersSlice = createSlice({
@@ -98,6 +99,9 @@ const usersSlice = createSlice({
     },
     updateProfileStatusText(state, action) {
       state.ProfileStatus = action.payload;
+    },
+    updateProfilePhoto(state, action) {
+      state.profilePhoto = action.payload;
     }
   },
   extraReducers: (builder) => {
@@ -120,7 +124,7 @@ const usersSlice = createSlice({
   }
 });
 
-export const { follow, unFollow, setUsers, setUsersCount, setUsersCurrentPage, setUsersTotalPages, toggleIsFetching, setProfileData, updateNewStatusText, updateProfileStatusText, updateNewFullNameText, updateNewIdText, updateNewCityText, updateNewCountryText, updateNewPhotoUrlText } = usersSlice.actions;
+export const { follow, unFollow, setUsers, setUsersCount, setUsersCurrentPage, setUsersTotalPages, toggleIsFetching, setProfileData, updateNewStatusText, updateProfileStatusText, updateNewFullNameText, updateNewIdText, updateNewCityText, updateNewCountryText, updateNewPhotoUrlText, updateProfilePhoto } = usersSlice.actions;
 export default usersSlice.reducer;
 
 /* 
