@@ -17,7 +17,8 @@ const Content = (props) => {
     const dispatch = useDispatch();
 
     const profilePhoto = useSelector((state) => state.users.profilePhoto);
-    const userId = props.userId;
+    // const userId = props.userId;
+    const userId = localStorage.getItem('userId');
 
     let onPhotoChange = (e) => {
         let text = e.target.value;
@@ -55,13 +56,13 @@ const Content = (props) => {
         try {
             const response = await fetch("http://localhost:5000/api/save-photo", {
                 method: "POST",
-                headers: { "Content-Type": "multipart/form-data" },
                 body: formData
             });
 
             const data = await response.json();
-            if (data.photoUrl) {
-                dispatch(updateProfilePhoto(data.photoUrl)); // или другой экшен
+            console.log(data);
+            if (data.photoUrl1) {
+                dispatch(updateProfilePhoto(data.photoUrl1)); // или другой экшен
             }
         } catch (error) {
             console.error("Ошибка загрузки фото:", error);
@@ -82,7 +83,7 @@ const Content = (props) => {
                                 <img src={typeof profilePhoto === 'string' && profilePhoto.trim() !== "" ? profilePhoto : userPhoto} alt="avatarPhoto" />
                                 {/* {props.userProfile && <input type={"file"} onChange={onPhotoChange} />} */}
                                 {/* <button>Отправить</button> */}
-                                <input type="file" accept="image/*" onChange={handlePhotoUpload} />
+                                {props.userProfile && <input type="file" accept="image/*" onChange={handlePhotoUpload} />}
                             </div>
                         </div>
                         <div>

@@ -1,6 +1,8 @@
 import express from 'express';
 const router = express.Router();
+import { UsersCollection } from './../db.js';
 import multer from "multer";
+import { ObjectId } from 'mongodb';
 import path from 'path';
 // import { v4 as uuidv4 } from 'uuid';
 
@@ -20,9 +22,6 @@ const storage = multer.diskStorage({
 const upload = multer({ storage }); */
 
 const upload = multer({ dest: "uploads/" });
-
-
-import { UsersCollection } from '../db.js'; // импорт своей коллекции
 
 // GET статус пользователя
 router.get("/:id", async (req, res) => {
@@ -57,20 +56,27 @@ router.get("/:id", async (req, res) => {
 
 router.post("/", upload.single("photo"), async (req, res) => {
     const { userId } = req.body;
-    const photoUrl = `/uploads/${req.file.filename}`;
+    const photoUrl1 = `/uploads/${req.file.filename}`;
     // Можно сохранить в БД, если нужно
+    console.log(photoUrl1);
+    console.log(userId);
     try {
         const result = await UsersCollection.updateOne(
-            { id: userId },
-            { $set: { photoUrl: photoUrl } }
+            { _id: new ObjectId(userId) },
+            { $set: { photoUrl: photoUrl1 } }
         );
-        res.json({ photoUrl });
-        res.status(201).json({ updated: result.modifiedCount });
+        if (result.modifiedCount === 1) {
+            console.log("Фото успешно обновлено");
+        } else {
+            console.warn("Фото не обновлено — пользователь не найден?");
+        }
+        res.json({ photoUrl1 });
+        // res.status(201).json({ updated: result.modifiedCount });
     } catch (err) {
         console.error("Ошибка обновления фото:", err);
         res.status(500).json({ error: "Не удалось обновить фото" });
     }
-    res.json({ photoUrl });
+    // res.json({ photoUrl });
 });
 
 
