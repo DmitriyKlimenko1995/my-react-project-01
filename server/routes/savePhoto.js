@@ -1,9 +1,26 @@
 import express from 'express';
 const router = express.Router();
 import multer from "multer";
-const path = require("path");
+import path from 'path';
+// import { v4 as uuidv4 } from 'uuid';
+
+
+/* // 📁 Папка для хранения файлов
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, 'uploads'); // Путь к папке
+    },
+    filename: (req, file, cb) => {
+        const ext = path.extname(file.originalname); // .jpg, .png и т.д.
+        const uniqueName = `${uuidv4()}${ext}`;
+        cb(null, uniqueName);
+    }
+});
+
+const upload = multer({ storage }); */
 
 const upload = multer({ dest: "uploads/" });
+
 
 import { UsersCollection } from '../db.js'; // импорт своей коллекции
 
