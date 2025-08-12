@@ -9,6 +9,7 @@ import status from './routes/status.js';
 import savephoto from './routes/savePhoto.js';
 import subScribe from './routes/subscribing.js';
 import messages from './routes/messages.js';
+import signup from './routes/verifyTurnstile.js';
 import mongoose from 'mongoose';
 import { UsersCollection, MessagesCollection, postsCollection, client } from "./db.js";
 const PORT = 5000;
@@ -23,6 +24,7 @@ app.use(cors());
 app.use(express.static("public"));
 app.use(express.json());
 app.use(bodyParser.json());
+app.set('trust proxy', true);
 app.use("/uploads", express.static("uploads"));
 
 (async () => {
@@ -137,6 +139,7 @@ app.use('/api/sub', subScribe);
 app.use('/api/messages', messages);
 app.use('/api/status', status);
 app.use('/api/save-photo', savephoto);
+app.use('/api/signup', signup);
 
 /* mongoose.connect(process.env.MONGO_URI)
   .then(() => app.listen(5000, () => console.log('Server running')))

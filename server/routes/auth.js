@@ -1,6 +1,7 @@
 import express from 'express';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
+import fetch from 'node-fetch';
 import User from '../models/User.js';
 import { UsersCollection } from "./../db.js";
 
@@ -28,13 +29,31 @@ router.post('/register', async (req, res) => {
     }
 });
 
+async function verifyCaptcha(token) {
+    const res = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams({
+            secret: process.env.TURNSTILE_SECRET,
+            response: token
+        })
+    });
+    const data = await res.json();
+    return data.success;
+}
 
 router.post('/login', async (req, res) => {
-    const { username, password } = req.body;
+    const { username, password, token } = req.body;
+    console.log('SECRET', process.env.TURNSTILE_SECRET);
+
+    if (!await verifyCaptcha(token)) {
+        return res.status(403).json({ error: 'captcha_failed' });
+    }
+
     const usersCollection = UsersCollection;
 
     try {
-        const user = await usersCollection.findOne({username});
+        const user = await usersCollection.findOne({ username });
         console.log(user);
         if (!user) {
             return res.status(404).json({ error: 'Пользователь не найден' });

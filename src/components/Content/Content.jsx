@@ -80,7 +80,7 @@ const Content = (props) => {
                         <div>
                             <div className={usersmodule.item}>
                                 {/* <img src={typeof props.profile.photoUrl === 'string' && props.profile.photoUrl.trim() !== "" ? props.profile.photoUrl : userPhoto} alt="avatarPhoto" /> */}
-                                <img src={typeof profilePhoto === 'string' && profilePhoto.trim() !== "" ? profilePhoto : userPhoto} alt="avatarPhoto" />
+                                <img src={`http://localhost:5000${profilePhoto}`} alt="avatarPhoto" />
                                 {/* {props.userProfile && <input type={"file"} onChange={onPhotoChange} />} */}
                                 {/* <button>Отправить</button> */}
                                 {props.userProfile && <input type="file" accept="image/*" onChange={handlePhotoUpload} />}
