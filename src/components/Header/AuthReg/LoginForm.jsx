@@ -38,6 +38,9 @@ function LoginForm(props) {
             <Turnstile
                 sitekey="0x4AAAAAABrCazomW9bE6V71"
                 onSuccess={(token) => setCaptchaToken(token)}
+                onError={() => console.error('Captcha error')}
+                onExpire={() => setCaptchaToken('')} // токен устарел
+
             />
 
             <button type="submit">Войти</button>

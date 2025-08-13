@@ -23,26 +23,26 @@ let UsersContainer = (props) => {
     loadUsers(); */
 
     useEffect(() => {
-        const fetchUsers = async () => {
-            dispatch(toggleIsFetching(true));
+            const fetchUsers = async () => {
+                dispatch(toggleIsFetching(true));
 
-            try {
-                const res = await fetch(`http://localhost:5000/api/users?page=${users.currentPage}&limit=${users.pageSize}`);
-                const data = await res.json();
+                try {
+                    const res = await fetch(`http://localhost:5000/api/users?page=${users.currentPage}&limit=${users.pageSize}`);
+                    const data = await res.json();
 
-                dispatch(setUsers(data.users));
-                dispatch(setUsersCount(data.pageInfo.totalUsers));
-                dispatch(setUsersTotalPages(data.pageInfo.totalPages));
-            } catch (error) {
-                console.error("Ошибка при загрузке пользователей:", error);
-            } finally {
-                debugger;
-                dispatch(toggleIsFetching(false));
-            }
-        };
+                    dispatch(setUsers(data.users));
+                    dispatch(setUsersCount(data.pageInfo.totalUsers));
+                    dispatch(setUsersTotalPages(data.pageInfo.totalPages));
+                } catch (error) {
+                    console.error("Ошибка при загрузке пользователей:", error);
+                } finally {
+                    debugger;
+                    dispatch(toggleIsFetching(false));
+                }
+            };
 
-        fetchUsers();
-    }, [dispatch, users.currentPage, users.pageSize]);
+            fetchUsers();
+        }, [dispatch, users.currentPage, users.pageSize]);
 
 
 
