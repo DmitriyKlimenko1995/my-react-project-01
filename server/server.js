@@ -10,6 +10,7 @@ import savephoto from './routes/savePhoto.js';
 import subScribe from './routes/subscribing.js';
 import messages from './routes/messages.js';
 import signup from './routes/verifyTurnstile.js';
+import searchRoutes from './routes/search.js';
 import mongoose from 'mongoose';
 import { UsersCollection, MessagesCollection, postsCollection, client } from "./db.js";
 const PORT = 5000;
@@ -140,6 +141,7 @@ app.use('/api/messages', messages);
 app.use('/api/status', status);
 app.use('/api/save-photo', savephoto);
 app.use('/api/signup', signup);
+app.use('/api/search', searchRoutes);
 
 /* mongoose.connect(process.env.MONGO_URI)
   .then(() => app.listen(5000, () => console.log('Server running')))

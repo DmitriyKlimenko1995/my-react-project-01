@@ -10,8 +10,8 @@ router.post("/", authMiddleware, async (req, res) => {
     const { recipientId, text } = req.body;
 
     try {
-        console.log(req.user._id.toString());
-        console.log(recipientId);
+        // console.log(req.user._id.toString());
+        // console.log(recipientId);
         const messagesCollection = MessagesCollection;
         const message = {
             sender: req.user._id.toString(),            // ObjectId как строка
@@ -33,8 +33,8 @@ router.get("/:userId", authMiddleware, async (req, res) => {
         const messagesCollection = MessagesCollection;
         // console.log(messagesCollection.find());
         const userId = req.params.userId;
-        console.log(userId);
-        console.log(req.user._id.toString());
+        // console.log(userId);
+        // console.log(req.user._id.toString());
 
 
         const messages = await messagesCollection
@@ -46,8 +46,8 @@ router.get("/:userId", authMiddleware, async (req, res) => {
             })
             .sort({ timestamp: 1 })
             .toArray();
-        console.log("messages must be here");
-        console.log(messages);
+        // console.log("messages must be here");
+        // console.log(messages);
 
         res.json(messages);
     } catch (err) {

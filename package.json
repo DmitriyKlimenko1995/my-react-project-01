@@ -9,10 +9,13 @@
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.3.0",
     "@testing-library/user-event": "^13.5.0",
+    "@types/react": "^19.1.10",
+    "@types/react-dom": "^19.1.7",
     "axios": "^1.10.0",
     "express": "^5.1.0",
     "express-rate-limit": "^8.0.1",
     "gh-pages": "^6.3.0",
+    "jwt-decode": "^4.0.0",
     "multer": "^2.0.2",
     "node-fetch": "^3.3.2",
     "path": "^0.12.7",
@@ -24,6 +27,7 @@
     "react-scripts": "^5.0.1",
     "react-turnstile": "^1.1.4",
     "redux": "^5.0.1",
+    "typescript": "^5.9.2",
     "uuid": "^11.1.0",
     "web-vitals": "^2.1.4"
   },
@@ -55,6 +59,8 @@
     ]
   },
   "devDependencies": {
+    "@types/jest": "^30.0.0",
+    "@types/node": "^24.3.0",
     "concurrently": "^9.2.0"
   }
 }

@@ -5,6 +5,7 @@ import sitebarSlice from "./sitebar-slice";
 import usersSlice from "./users-slice";
 import authSlice from "./auth-slice";
 import messagesSlice from "./messagesSlice";
+import searchSlice from "./searchSlice";
 
 const store = configureStore({
     reducer: {
@@ -14,6 +15,7 @@ const store = configureStore({
         users: usersSlice,
         auth: authSlice,
         messages: messagesSlice,
+        search: searchSlice
     },
     devTools: process.env.NODE_ENV !== 'production',
 });

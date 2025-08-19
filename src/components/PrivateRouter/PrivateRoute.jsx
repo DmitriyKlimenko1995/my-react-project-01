@@ -1,19 +1,36 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { Navigate, useLocation } from 'react-router-dom';
+import { isTokenExpired } from './authUtils';
 
 function PrivateRoute({ children }) {
-    const token = useSelector(state => state.auth.token);
+    // const token = useSelector(state => state.auth.token);
+    const token = localStorage.getItem('authToken');
     const location = useLocation();
 
-    if (token) return children;
+    // if (token) return children;
 
-    // Если пользователь идёт на защищённый маршрут и пришёл с регистрации, отправляем обратно на регистрацию
+    // Проверяем, есть ли токен и не истёк ли он
+    // if (isTokenExpired(token)) {
+    //     <Navigate to="/login" replace />;
+    // }
     if (location.pathname === '/registerform') {
         return <Navigate to="/registerform" />;
     }
 
-    return <Navigate to="/loginform" />;
+    if (!token || isTokenExpired(token)) {
+        return <Navigate to="/loginform" replace />;
+    }
+
+
+    // Если пользователь идёт на защищённый маршрут и пришёл с регистрации, отправляем обратно на регистрацию
+    // if (location.pathname === '/registerform') {
+    //     return <Navigate to="/registerform" />;
+    // }
+
+    return children;
+
+    // return <Navigate to="/loginform" />;
     // return token ? children : <Navigate to="/loginform" />;
 }
 

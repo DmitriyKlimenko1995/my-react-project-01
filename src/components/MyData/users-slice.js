@@ -26,7 +26,6 @@ export const unSubScribe = createAsyncThunk('user/unsubscribe', async (credentia
   return response.message;
 });
 
-
 let initialState = {
   users: [],
   newPostText: "input text!",

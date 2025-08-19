@@ -6,9 +6,9 @@ import { UsersCollection } from './../db.js'; // импорт своей кол�
 router.get("/:id", async (req, res) => {
     try {
         const userId = Number(req.params.id);
-        console.log(userId);
+        // console.log(userId);
         const user = await UsersCollection.findOne({ id: userId });
-        console.log(user);
+        // console.log(user);
         res.json({ status: user?.status ?? "Не задан" });
     } catch (err) {
         console.error("Ошибка получения статуса:", err);

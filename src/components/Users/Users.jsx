@@ -4,6 +4,8 @@ import userPhoto from './../../assets/images/avatar.png';
 import { NavLink } from "react-router-dom";
 import FollowButton from "./FollowButton";
 import ChatBox from "../Dialogs/Chat/ChatBox";
+import UsersSearchForm from './UsersSearchForm';
+import SearchResults from './SearchResults';
 
 let Users = (props) => {
 
@@ -24,6 +26,8 @@ let Users = (props) => {
     }
 
     return <div>
+        <UsersSearchForm />
+        <SearchResults />
         <div className={usersmodule.paginator}>
             {portionNumber > 1 && (
                 <button onClick={() => setPortionNumber(portionNumber - 1)}>Prev</button>
@@ -57,7 +61,7 @@ let Users = (props) => {
                                 <img
                                     src={
                                         typeof u?.photoUrl === 'string' && u.photoUrl.trim() !== ''
-                                            ? u.photoUrl
+                                            ? `http://localhost:5000${u.photoUrl}`
                                             : userPhoto
                                     }
                                     alt="avatarPhoto"

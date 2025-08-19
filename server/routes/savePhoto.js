@@ -3,6 +3,7 @@ const router = express.Router();
 import { UsersCollection } from './../db.js';
 import multer from "multer";
 import { ObjectId } from 'mongodb';
+import authMiddleware from "../middleware/auth.js";
 import path from 'path';
 // import { v4 as uuidv4 } from 'uuid';
 
@@ -24,10 +25,9 @@ const upload = multer({ storage }); */
 const upload = multer({ dest: "uploads/" });
 
 // GET статус пользователя
-router.get("/:id", async (req, res) => {
+router.get("/:id", authMiddleware, async (req, res) => {
     try {
         const userId = Number(req.params.id);
-        console.log(userId);
         const user = await UsersCollection.findOne({ id: userId });
         res.json({ photoUrl: user?.photoUrl ?? "Не задан" });
     } catch (err) {
@@ -58,8 +58,8 @@ router.post("/", upload.single("photo"), async (req, res) => {
     const { userId } = req.body;
     const photoUrl1 = `/uploads/${req.file.filename}`;
     // Можно сохранить в БД, если нужно
-    console.log(photoUrl1);
-    console.log(userId);
+    // console.log(photoUrl1);
+    // console.log(userId);
     try {
         const result = await UsersCollection.updateOne(
             { _id: new ObjectId(userId) },

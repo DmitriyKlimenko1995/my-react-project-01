@@ -19,6 +19,7 @@ const Content = (props) => {
     const profilePhoto = useSelector((state) => state.users.profilePhoto);
     // const userId = props.userId;
     const userId = localStorage.getItem('userId');
+    const token = localStorage.getItem('authToken');
 
     let onPhotoChange = (e) => {
         let text = e.target.value;
@@ -26,11 +27,16 @@ const Content = (props) => {
     }
 
     useEffect(() => {
-        fetch(`http://localhost:5000/api/save-photo/${userId}`)
+        fetch(`http://localhost:5000/api/save-photo/${props.userId}`, {
+            method: "GET",
+            headers: {
+                "Authorization": `Bearer ${token}`,
+            },
+        })
             .then(res => res.json())
             .then(data => dispatch(updateProfilePhoto(data.photoUrl)))
             .catch(err => console.error("Ошибка загрузки статуса:", err));
-    }, [userId]);
+    }, []);
 
     /*     const handleUpdate = () => {
             fetch("http://localhost:5000/api/save-photo", {

@@ -9,8 +9,8 @@ const router = express.Router();
 
 router.post('/register', async (req, res) => {
     const { username, password } = req.body;
-    console.log(username);
-    console.log(password);
+    // console.log(username);
+    // console.log(password);
     const usersCollection = UsersCollection;
 
     try {
@@ -44,17 +44,17 @@ async function verifyCaptcha(token) {
 
 router.post('/login', async (req, res) => {
     const { username, password, token } = req.body;
-    console.log('SECRET', process.env.TURNSTILE_SECRET);
+    // console.log('SECRET', process.env.TURNSTILE_SECRET);
 
-    if (!await verifyCaptcha(token)) {
-        return res.status(403).json({ error: 'captcha_failed' });
-    }
+    // if (!await verifyCaptcha(token)) {
+    //     return res.status(403).json({ error: 'captcha_failed' });
+    // }
 
     const usersCollection = UsersCollection;
 
     try {
         const user = await usersCollection.findOne({ username });
-        console.log(user);
+        // console.log(user);
         if (!user) {
             return res.status(404).json({ error: 'Пользователь не найден' });
         }
