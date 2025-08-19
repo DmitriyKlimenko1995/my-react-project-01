@@ -7,7 +7,8 @@ import { ObjectId } from "mongodb";
 const router = express.Router();
 
 router.get('/', async (req, res) => {
-    const query = req.query.query?.trim();
+    // const query = req.query.query?.trim();
+    const { query, role } = req.query;
     if (!query) return res.status(400).json([]);
 
     try {

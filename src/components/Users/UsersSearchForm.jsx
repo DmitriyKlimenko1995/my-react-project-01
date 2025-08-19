@@ -1,20 +1,42 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { useForm } from 'react-hook-form';
 import { useDispatch } from 'react-redux';
 import { searchUsersThunk } from '../MyData/searchSlice';
 
 const UsersSearchForm = () => {
-    const { register, handleSubmit } = useForm();
+    const { register, watch } = useForm();
     const dispatch = useDispatch();
+    const debounceRef = useRef(null);
 
-    const onSubmit = (data) => {
-        dispatch(searchUsersThunk(data.query));
-    };
+    // отслеживаем все поля
+    const { query, role } = watch();
+
+    useEffect(() => {
+        if (debounceRef.current) clearTimeout(debounceRef.current);
+
+        debounceRef.current = setTimeout(() => {
+            const filters = {
+                ...(query?.trim() && { query: query.trim() }),
+                ...(role?.trim() && { role: role.trim() }),
+            };
+
+            if (Object.keys(filters).length > 0) {
+                dispatch(searchUsersThunk(filters));
+            }
+        }, 400);
+    }, [query, role, dispatch]);
+
+    // const onSubmit = (data) => {
+    //     dispatch(searchUsersThunk(data.query));
+    // };
 
     return (
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form>
             <input {...register('query')} placeholder="Search users..." />
-            <button type="submit">Search</button>
+            <select {...register('role')}>
+                <option value="follow">Друг</option>
+                <option value="unfollow">Не друг</option>
+            </select>
         </form>
     );
 }
