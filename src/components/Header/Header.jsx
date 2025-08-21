@@ -5,8 +5,9 @@ import { NavLink, Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../MyData/auth-slice";
 import { fetchUsers } from './../MyData/users-slice';
+import { Col, Row } from 'antd';
 
-const Header = (props) => {
+const Header1 = (props) => {
 
     const dispatch = useDispatch();
 
@@ -20,7 +21,7 @@ const Header = (props) => {
     useEffect(() => {
         debugger;
         dispatch(fetchUsers());
-    }, [dispatch]);
+    }, [status, dispatch]);
 
     const logOut = (e) => {
         e.preventDefault();
@@ -29,20 +30,19 @@ const Header = (props) => {
     };
 
     return (
-        <header className={headermodule.header}>
-            <img src={logo} className="App-logo" alt="logo" />
-
-            <div className={headermodule.loginBlock}>
-                {status === 'succeeded' ? <div className={headermodule.logout} onClick={logOut}>{user?.fullname ? `${user.fullname} | LogOut` : 'Unknown User | LogOut'}</div> : <div>
-                    <NavLink to={'/loginform'}>Login</NavLink>
-                    <div></div>
-                    <NavLink to={'/registerform'}>Registration</NavLink>
-                </div>}
-
-                {/* {token} */}
-            </div>
-        </header>
+        <div className={headermodule.loginBlock}>
+            {status === 'succeeded' ? (
+                <div className={headermodule.logout}>
+                    {user?.fullname ? user.fullname : 'Unknown User'}{' | '}
+                    <a onClick={logOut}>logOut</a>
+                </div>
+            ) : (
+                <div className={headermodule.authLinks}>
+                    <NavLink to="/loginform">Login</NavLink> | <NavLink to="/registerform">Registration</NavLink>
+                </div>
+            )}
+        </div>
     );
 }
 
-export default Header;
+export default Header1;

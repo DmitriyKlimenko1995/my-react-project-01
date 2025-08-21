@@ -15,3 +15,20 @@
   grid-area: c;
   background-color: cornflowerblue;
 }
+
+.App-logo {
+  width: 90px;
+}
+
+.header {
+  grid-area: h;
+  justify-content: space-between;
+}
+
+.content {
+  grid-area: c;
+}
+
+.sider {
+  grid-area: n;
+}

@@ -8,19 +8,13 @@ const FollowButton = ({ targetId, refreshFlag }) => {
 
   useEffect(() => {
     // Получить статус подписки (по желанию)
-    debugger;
     fetch(`http://localhost:5000/api/sub/is-following/${targetId}?userId=${userId}`)
       .then(res => res.json())
       .then(data => {
         console.log("response:", data);
-        debugger;
         setIsFollowing(data.following);
       });
-    debugger;
   }, [targetId, userId]);
-  debugger;
-
-  console.log(isFollowing);
 
   const toggleFollow = async () => {
     setLoading(true);

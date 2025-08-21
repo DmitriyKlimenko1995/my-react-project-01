@@ -53,7 +53,7 @@ const Nav = (props) => {
 
     return (
         <nav className={navmodule.nav}>
-            <div className={navmodule.item}>
+            {/* <div className={navmodule.item}>
                 <NavLink to="/content" className={({ isActive }) => isActive ? navmodule.active : undefined}>Profile</NavLink>
             </div>
             <div className={navmodule.item}>
@@ -73,7 +73,7 @@ const Nav = (props) => {
             </div>
             <div className={navmodule.item}>
                 <NavLink to="/chat">Chat</NavLink>
-            </div>
+            </div> */}
             <PrivateRoute>
                 <div className={navmodule.friend}>
                     Friends

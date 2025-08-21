@@ -7,6 +7,7 @@ import React, { useEffect } from "react";
 const ChatPath = (props) => {
     const dispatch = useDispatch();
     const { id } = useParams();
+    const authId = localStorage.getItem('userId');
     debugger;
     // const userId = useSelector((state) => state.users.users[Number(id)]._id);
     const userId = useSelector((state) => {
@@ -22,8 +23,7 @@ const ChatPath = (props) => {
     }, [dispatch, id]);
 
     if (!userId) return <div>Loading...</div>;
-
-    return <ChatBox userId={userId} handleSubscribe={props.handleSubscribe} />
+    if (userId !== authId) return <ChatBox userId={userId} handleSubscribe={props.handleSubscribe} />;
 }
 
 export default ChatPath;

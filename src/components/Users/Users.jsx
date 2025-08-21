@@ -9,7 +9,7 @@ import SearchResults from './SearchResults';
 
 let Users = (props) => {
 
-    const userId = localStorage.getItem('authToken');
+    const userId = localStorage.getItem('userId');
     // При запросе
     // const decoded = jwt.verify(token, process.env.JWT_SECRET);
     // const userId = decoded.userId;
@@ -19,6 +19,7 @@ let Users = (props) => {
     const [portionNumber, setPortionNumber] = useState(1);
     const leftPortionPageNumber = (portionNumber - 1) * portionSize + 1;
     const rightPortionPageNumber = portionNumber * portionSize;
+    debugger;
 
     let pages = [];
     for (let i = 1; i <= props.userState.totalPages; i++) {
@@ -44,8 +45,8 @@ let Users = (props) => {
                         {p}
                     </span>
                 ))}
-            { portionCount > portionNumber && 
-            <button onClick={() => { setPortionNumber(portionNumber + 1) }}>Next</button> }
+            {portionCount > portionNumber &&
+                <button onClick={() => { setPortionNumber(portionNumber + 1) }}>Next</button>}
         </div>
         {/* <div className={usersmodule.pageButton}>
             {pages.map(p =>
@@ -69,10 +70,10 @@ let Users = (props) => {
                             </NavLink>
                         </div>
                         <div>
-                            <FollowButton targetId={u?._id} refreshFlag={props.refreshFlag} />
-                            <NavLink to={'/chat/' + ((u?.id) - 1)}>
+                            {!(u?._id === userId) ? <FollowButton targetId={u?._id} refreshFlag={props.refreshFlag} /> : ''}
+                            {!(u?._id === userId) ? <NavLink to={'/chat/' + ((u?.id) - 1)}>
                                 <button>chat</button>
-                            </NavLink>
+                            </NavLink> : ''}
                         </div>
                     </div>
 
