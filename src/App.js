@@ -19,6 +19,7 @@ import logo from "./logo.svg";
 
 import { LaptopOutlined, NotificationOutlined, UserOutlined, UserSwitchOutlined, FileDoneOutlined, SettingOutlined, WechatOutlined } from '@ant-design/icons';
 import { Breadcrumb, Layout, Menu, theme } from 'antd';
+import { ChatRoom } from './components/Dialogs/Chat/ChatRoom';
 const { Header, Content, Footer, Sider } = Layout;
 const items1 = ['1', '2', '3'].map(key => ({
   key,
@@ -58,6 +59,7 @@ function App() {
   } = theme.useToken();
 
   const userId = localStorage.getItem('userId');
+  const token = localStorage.getItem('userId');
 
   const [refreshFlag, setRefreshFlag] = useState(false);
 
@@ -120,6 +122,12 @@ function App() {
                     element={
                       <PrivateRoute>
                         <ChatPath handleSubscribe={handleSubscribe} />
+                      </PrivateRoute>} />
+                  <Route
+                    path="/chatroom/:id"
+                    element={
+                      <PrivateRoute>
+                        <ChatRoom />
                       </PrivateRoute>} />
                   <Route
                     path="/profile/:id"

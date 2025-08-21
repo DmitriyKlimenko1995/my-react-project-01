@@ -6,6 +6,7 @@ import usersSlice from "./users-slice";
 import authSlice from "./auth-slice";
 import messagesSlice from "./messagesSlice";
 import searchSlice from "./searchSlice";
+import chatReducer from './chatSlice';
 
 const store = configureStore({
     reducer: {
@@ -15,7 +16,8 @@ const store = configureStore({
         users: usersSlice,
         auth: authSlice,
         messages: messagesSlice,
-        search: searchSlice
+        search: searchSlice,
+        chat: chatReducer
     },
     devTools: process.env.NODE_ENV !== 'production',
 });
