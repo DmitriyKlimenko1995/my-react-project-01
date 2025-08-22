@@ -74,7 +74,7 @@ let Users = (props) => {
                             {!(u?._id === userId) ? <NavLink to={'/chat/' + ((u?.id) - 1)}>
                                 <button>chat</button>
                             </NavLink> : ''}
-                            {!(u?._id === userId) ? <NavLink to={'/chatroom/' + ((u?.id) - 1)}>
+                            {(u?._id === userId) ? <NavLink to={'/chatroom/' + u?._id}>
                                 <button>chatroom</button>
                             </NavLink> : ''}
                         </div>

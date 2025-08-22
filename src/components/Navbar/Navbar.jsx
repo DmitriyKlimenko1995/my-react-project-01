@@ -45,9 +45,10 @@ const Nav = (props) => {
         myFollowing?.following?.some(id => id === user._id)
     );
 
-
     const friendElements = followedUsers.map(p => (
-        <Friend key={p._id} name={p.fullname} url={p.photoUrl} />
+        <NavLink key={p._id} to={'/chatroom/' + p?._id}>
+            <Friend name={p.fullname} url={p.photoUrl} />
+        </NavLink>
     ));
 
 

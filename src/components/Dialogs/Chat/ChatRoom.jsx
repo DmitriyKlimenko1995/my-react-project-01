@@ -6,10 +6,10 @@ import { useParams } from "react-router-dom";
 
 export const ChatRoom = () => {
 
-    // const { id } = useParams();
-    // const roomId = id;
+    const { id } = useParams();
+    const roomId = id;
     const token = localStorage.getItem('authToken');
-    const roomId = localStorage.getItem('userId');
+    // const roomId = '68a80a7e5026ad284dceb74c';
 
     const dispatch = useDispatch();
     const messages = useSelector(state => state.chat.messages);

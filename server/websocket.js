@@ -6,6 +6,7 @@ import cors from 'cors';
 import jwt from 'jsonwebtoken';
 import { WebSocketServer } from 'ws';
 import { MongoClient, ObjectId } from 'mongodb';
+import { MessagesCollection } from "./db.js";
 
 const app = express();
 app.use(cors());
@@ -17,13 +18,13 @@ const PORT = process.env.PORT || 4000;
 
 let db, users, rooms, messages;
 
-MongoClient.connect(MONGO_URI).then(client => {
-    db = client.db('chat');
-    users = db.collection('users');
-    rooms = db.collection('rooms');
-    messages = db.collection('messages');
-    console.log('MongoDB connected');
-});
+// MongoClient.connect(MONGO_URI).then(client => {
+//     db = client.db('chat');
+//     users = db.collection('users');
+//     rooms = db.collection('rooms');
+//     messages = db.collection('messages');
+//     console.log('MongoDB connected');
+// });
 
 const server = http.createServer(app);
 const wss = new WebSocketServer({ noServer: true });
@@ -31,8 +32,13 @@ const wss = new WebSocketServer({ noServer: true });
 const sockets = new Map(); // ws -> { userId, rooms: Set }
 
 server.on('upgrade', async (req, socket, head) => {
+    // const url = new URL(req.url, 'http://localhost');
+    // const token = url.searchParams.get('token');
+
     const url = new URL(req.url, 'http://localhost');
     const token = url.searchParams.get('token');
+    // const recipientId = url.searchParams.get('recipientId');
+
     if (!token) return socket.destroy();
 
     try {
@@ -58,43 +64,80 @@ wss.on('connection', (ws, req) => {
             return;
         }
 
-        const meta = sockets.get(ws);
-        if (!meta) return;
+        const messagesCollection = MessagesCollection;
+
+        // const meta = sockets.get(ws);
+        // if (!meta) return;
 
         switch (data.type) {
             case 'JOIN': {
-                const roomId = data.roomId;
-                if (!ObjectId.isValid(roomId)) {
+                const recipientId = data.roomId;
+                console.log(recipientId);
+                if (!ObjectId.isValid(recipientId)) {
                     ws.send(JSON.stringify({ type: 'ERROR', message: 'Invalid roomId format' }));
                     return;
                 }
-                const room = await rooms.findOne({ _id: new ObjectId(roomId), members: userId });
-                console.log(room);
-                if (!room) return;
+                // const room = await rooms.findOne({ _id: new ObjectId(roomId), members: userId });
+                // const room = await rooms.findOneAndUpdate(
+                //     { _id: new ObjectId(roomId) },
+                //     { $addToSet: { members: new ObjectId(userId) } },
+                //     { returnDocument: 'after' } // вернёт обновлённый документ
+                // );
+                // console.log(room);
+                // if (!room) return;
 
-                meta.rooms.add(roomId);
-                const recent = await messages.find({ roomId }).sort({ createdAt: -1 }).limit(50).toArray();
-                ws.send(JSON.stringify({ type: 'BACKFILL', roomId, messages: recent.reverse() }));
+                // meta.rooms.add(roomId);
+                // const recent = await messages.find({ roomId }).sort({ createdAt: -1 }).limit(50).toArray();
+
+                console.log(userId);
+                console.log(recipientId);
+
+
+                const messages = await messagesCollection
+                    .find({
+                        $or: [
+                            { sender: userId, recipient: recipientId },
+                            { sender: recipientId, recipient: userId }
+                        ]
+                    })
+                    .sort({ timestamp: 1 })
+                    .toArray();
+
+                ws.send(JSON.stringify({ type: 'BACKFILL', messages: messages }));
                 break;
             }
             case 'MESSAGE': {
-                const { roomId, text } = data;
+                const { text } = data;
+                const recipientId = data.roomId;
                 // console.log(meta.rooms.has(roomId));
-                if (!meta.rooms.has(roomId)) return;
+                // if (!meta.rooms.has(roomId)) return;
+
+                // const message = {
+                //     roomId,
+                //     senderId: userId,
+                //     text,
+                //     createdAt: new Date()
+                // };
 
                 const message = {
-                    roomId,
-                    senderId: userId,
+                    sender: userId,            // ObjectId как строка
+                    recipient: recipientId,
                     text,
-                    createdAt: new Date()
+                    timestamp: new Date()
                 };
-                await messages.insertOne(message);
 
-                for (const [peer, pMeta] of sockets.entries()) {
-                    if (pMeta.rooms.has(roomId)) {
-                        peer.send(JSON.stringify({ type: 'MESSAGE', roomId, message }));
-                    }
-                }
+                console.log(message);
+
+                await messagesCollection.insertOne(message);
+
+                // for (const [peer, pMeta] of sockets.entries()) {
+                //     if (pMeta.rooms.has(roomId)) {
+                //         peer.send(JSON.stringify({ type: 'MESSAGE', roomId, message }));
+                //     }
+                // }
+
+                ws.send(JSON.stringify({ type: 'MESSAGE', message }));
+
                 break;
             }
         }
