@@ -5,7 +5,7 @@ import http from 'http';
 import cors from 'cors';
 import jwt from 'jsonwebtoken';
 import { WebSocketServer } from 'ws';
-import { MongoClient, ObjectId } from 'mongodb';
+import { ObjectId } from 'mongodb';
 import { MessagesCollection } from "./db.js";
 
 const app = express();
@@ -13,10 +13,8 @@ app.use(cors());
 app.use(express.json());
 
 const JWT_SECRET = process.env.JWT_SECRET || 'dev_secret';
-const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017';
 const PORT = process.env.PORT || 4000;
 
-let db, users, rooms, messages;
 
 // MongoClient.connect(MONGO_URI).then(client => {
 //     db = client.db('chat');
@@ -66,13 +64,16 @@ wss.on('connection', (ws, req) => {
 
         const messagesCollection = MessagesCollection;
 
-        // const meta = sockets.get(ws);
-        // if (!meta) return;
+        const meta = sockets.get(ws);
+        if (!meta) return;
 
         switch (data.type) {
             case 'JOIN': {
                 const recipientId = data.roomId;
-                console.log(recipientId);
+                // const meta = sockets.get(ws); // вот это важно
+                // if (!meta) return;
+
+                // console.log(recipientId);
                 if (!ObjectId.isValid(recipientId)) {
                     ws.send(JSON.stringify({ type: 'ERROR', message: 'Invalid roomId format' }));
                     return;
@@ -86,11 +87,11 @@ wss.on('connection', (ws, req) => {
                 // console.log(room);
                 // if (!room) return;
 
-                // meta.rooms.add(roomId);
+                meta.rooms.add(recipientId);
                 // const recent = await messages.find({ roomId }).sort({ createdAt: -1 }).limit(50).toArray();
 
-                console.log(userId);
-                console.log(recipientId);
+                // console.log(userId);
+                // console.log(recipientId);
 
 
                 const messages = await messagesCollection
@@ -126,17 +127,24 @@ wss.on('connection', (ws, req) => {
                     timestamp: new Date()
                 };
 
-                console.log(message);
+                // console.log(message);
 
-                await messagesCollection.insertOne(message);
+                const result = await messagesCollection.insertOne(message);
+                message._id = result.insertedId;
 
-                // for (const [peer, pMeta] of sockets.entries()) {
-                //     if (pMeta.rooms.has(roomId)) {
-                //         peer.send(JSON.stringify({ type: 'MESSAGE', roomId, message }));
-                //     }
-                // }
+                console.log(result);
 
-                ws.send(JSON.stringify({ type: 'MESSAGE', message }));
+                for (const [peer, pMeta] of sockets.entries()) {
+                    if (
+                        pMeta.userId === userId ||
+                        pMeta.userId === recipientId
+                    ) {
+                        peer.send(JSON.stringify({ type: 'MESSAGE', message }));
+                    }
+                }
+
+
+                // ws.send(JSON.stringify({ type: 'MESSAGE', message }));
 
                 break;
             }

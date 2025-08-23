@@ -1,0 +1,14 @@
+.friend-link {
+    text-decoration: none;
+    display: block;
+    color: red;
+    background-color: coral;
+    margin: 10px;
+    padding: 3px;
+}
+
+.friend-link.active {
+    background-color: #4b95b8;
+    /* нежно-голубой фон */
+    border-radius: 6px;
+}

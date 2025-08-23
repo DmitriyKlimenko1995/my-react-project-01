@@ -6,6 +6,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { useEffect, useState } from 'react';
 import { setUsers } from "../MyData/users-slice";
 import PrivateRoute from "../PrivateRouter/PrivateRoute";
+import './styles.css';
 
 
 
@@ -13,22 +14,21 @@ const Nav = (props) => {
 
     const userId = localStorage.getItem('userId');
     const [listUsers, setListUsers] = useState([]);
-    debugger;
 
     const dispatch = useDispatch();
 
     useEffect(() => {
-        debugger;
+
         const fetchUsers = async () => {
-            debugger;
+
             try {
-                debugger;
+
                 const res = await fetch(`http://localhost:5000/api/users`);
                 const data = await res.json();
-                debugger;
+
 
                 setListUsers(data.users);
-                debugger;
+
             } catch (error) {
                 console.error("Ошибка при загрузке пользователей:", error);
             }
@@ -36,17 +36,18 @@ const Nav = (props) => {
 
         fetchUsers();
     }, [props.refreshFlag]);
-    debugger;
 
     const myFollowing = listUsers.find(u => u._id === userId);
-    debugger;
 
     const followedUsers = listUsers.filter(user =>
         myFollowing?.following?.some(id => id === user._id)
     );
 
     const friendElements = followedUsers.map(p => (
-        <NavLink key={p._id} to={'/chatroom/' + p?._id}>
+        <NavLink key={p._id} to={'/chatroom/' + p?._id} className={({ isActive }) =>
+            isActive ? 'friend-link active' : 'friend-link'
+        }
+        >
             <Friend name={p.fullname} url={p.photoUrl} />
         </NavLink>
     ));

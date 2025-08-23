@@ -16,10 +16,8 @@ const Header1 = (props) => {
     const userId = localStorage.getItem('userId');
     const users = useSelector((state) => state.users.users);
     const user = users.find((u) => u._id === userId);
-    debugger;
 
     useEffect(() => {
-        debugger;
         dispatch(fetchUsers());
     }, [status, dispatch]);
 
