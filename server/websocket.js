@@ -101,12 +101,41 @@ wss.on('connection', (ws, req) => {
                             { sender: recipientId, recipient: userId }
                         ]
                     })
-                    .sort({ timestamp: 1 })
+                    .sort({ timestamp: -1 })
+                    .limit(100)
                     .toArray();
+
+                messages.reverse();
 
                 ws.send(JSON.stringify({ type: 'BACKFILL', messages: messages }));
                 break;
             }
+            case 'LOAD_OLDER': {
+                const { roomId, before } = data; // before = timestamp или _id самого старого сообщения в чате
+                if (!ObjectId.isValid(roomId)) return;
+
+                const query = {
+                    $or: [
+                        { sender: userId, recipient: roomId },
+                        { sender: roomId, recipient: userId }
+                    ]
+                };
+
+                if (before) {
+                    query.timestamp = { $lt: new Date(before) };
+                }
+
+                const olderMessages = await messagesCollection
+                    .find(query)
+                    .sort({ timestamp: -1 })
+                    .limit(100)
+                    .toArray();
+
+                olderMessages.reverse();
+                ws.send(JSON.stringify({ type: 'OLDER_MESSAGES', messages: olderMessages }));
+                break;
+            }
+
             case 'MESSAGE': {
                 const { text } = data;
                 const recipientId = data.roomId;

@@ -5,7 +5,7 @@ let socket;
 
 export const connectWS = createAsyncThunk(
     'chat/connectWS',
-    async ({ token, roomId }, { dispatch }) => {
+    async ({ token, roomId, containerRef, authUserId }, { dispatch }) => {
         socket = new WebSocket(`ws://localhost:4000?token=${token}`);
 
         socket.onopen = () => {
@@ -30,12 +30,27 @@ export const connectWS = createAsyncThunk(
         socket.onmessage = e => {
             const data = JSON.parse(e.data);
             if (data.type === 'MESSAGE') {
-                dispatch(addMessage(data.message));
+                const el = containerRef.current;
+                const distanceFromBottom = el.scrollHeight - el.scrollTop - el.clientHeight;
+                const isNearBottom = distanceFromBottom < 100;
+
+                dispatch(addMessage({
+                    ...data.message,
+                    isOwn: data.message.sender === authUserId,
+                    wasAtBottom: isNearBottom
+                }));
+
             } else if (data.type === 'BACKFILL') {
                 dispatch(setMessages(data.messages));
+            } else if (data.type === 'OLDER_MESSAGES') {
+                dispatch(prependMessages(data.messages));
             }
             console.log('📩 Message from server:', data);
         };
+
+        // 👇 Возвращаем сокет наружу
+        return { socket };
+
     }
 );
 
@@ -53,7 +68,9 @@ const chatSlice = createSlice({
     name: 'chat',
     initialState: {
         messages: [],
-        connected: false
+        connected: false,
+        shouldScroll: false, // 👈 новый флаг
+        hasUnreadMessages: false,
     },
     reducers: {
         setConnected: (state, action) => {
@@ -63,14 +80,45 @@ const chatSlice = createSlice({
             const exists = state.messages.some(m => m._id === action.payload._id);
             if (!exists) {
                 state.messages.push(action.payload);
-            }
 
+                // Если это чужое сообщение и пользователь был внизу — скроллим
+                if (!action.payload.isOwn && action.payload.wasAtBottom) {
+                    state.shouldScroll = true;
+                }
+
+                // Если это своё сообщение — скроллим только если был внизу
+                if (action.payload.isOwn && action.payload.wasAtBottom) {
+                    state.shouldScroll = true;
+                }
+
+                if (action.payload.isOwn && !action.payload.wasAtBottom) {
+                    state.hasUnreadMessages = true;
+                }
+
+                // Если чужое сообщение и пользователь не внизу — показываем "новые сообщения"
+                if (!action.payload.isOwn && !action.payload.wasAtBottom) {
+                    state.hasUnreadMessages = true;
+                }
+            }
         },
         setMessages: (state, action) => {
             state.messages = action.payload;
+        },
+        resetScroll: (state) => {
+            state.shouldScroll = false;
+        },
+        setHasUnreadMessages: (state, action) => {
+            state.hasUnreadMessages = action.payload;
+        },
+        prependMessages: (state, action) => {
+            // Вставляем в начало, не дублируем
+            const newOnes = action.payload.filter(
+                m => !state.messages.some(existing => existing._id === m._id)
+            );
+            state.messages = [...newOnes, ...state.messages];
         }
     }
 });
 
-export const { setConnected, addMessage, setMessages } = chatSlice.actions;
+export const { setConnected, addMessage, setMessages, resetScroll, setHasUnreadMessages, prependMessages } = chatSlice.actions;
 export default chatSlice.reducer;
